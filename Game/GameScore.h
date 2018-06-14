@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "GameResource.h"
 
 // 構造体の宣言 ============================================================
 
@@ -24,4 +25,4 @@ void GameScore_Add(GameScore* score, ObjectSide side);
 void GameScore_Clear(GameScore* score);
 
 // <スコア描画>
-void GameScore_Render(GameScore* score, GameObject* field, HFNT font);
+void GameScore_Render(GameScore* score, GameObject* field, GameResource* resources);

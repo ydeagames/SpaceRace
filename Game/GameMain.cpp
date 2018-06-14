@@ -39,15 +39,12 @@ GameResource g_resources;
 
 // <ゲームの更新処理:シーン> -------------------------------------------
 void UpdateGameSceneDemo(void);
-void UpdateGameSceneServe(void);
 void UpdateGameScenePlay(void);
 
 // <ゲームの描画処理> --------------------------------------------------
 void RenderGameSceneDemo(void);
-void RenderGameSceneServe(void);
 void RenderGameScenePlay(void);
 
-void UpdateGameScore(ObjectSide side);
 
 // 関数の定義 ==============================================================
 
@@ -94,6 +91,9 @@ void InitializeGame(void)
 	// リソース
 	g_resources = GameResource_Create();
 
+	// タイマー
+	g_scene.timer = GameTimer_Create();
+
 	// 得点
 	g_scene.score = GameScore_Create();
 
@@ -130,6 +130,9 @@ void UpdateGameSceneDemo(void)
 		// 入力されたら
 		if (IsButtonDown(PAD_INPUT_10))
 		{
+			// タイマーを開始
+			GameTimer_SetDefault(&g_scene.timer);
+
 			// 点数リセット
 			GameScore_Clear(&g_scene.score);
 
@@ -188,14 +191,7 @@ void UpdateGameScenePlay(void)
 		{
 			if (GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]))
 				PlaySoundMem(g_resources.sound_se02, DX_PLAYTYPE_BACK);
-			{
-				ObjectSide side = GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]);
-				if (side)
-				{
-					UpdateGameScore(side);
-					PlaySoundMem(g_resources.sound_se03, DX_PLAYTYPE_BACK);
-				}
-			}
+
 			if (GameObject_Ship_CollisionBullet(&g_scene.ship1, &g_scene.bullet[i]))
 			{
 				GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
@@ -209,15 +205,16 @@ void UpdateGameScenePlay(void)
 			}
 		}
 	}
-	GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1);
-	GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2);
-}
-
-// <ゲームの更新処理:スコア加算>
-void UpdateGameScore(ObjectSide side)
-{
-	// 得点処理
-	GameScore_Add(&g_scene.score, side);
+	{
+		if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1) == TOP)
+		{
+			GameScore_Add(&g_scene.score, LEFT);
+		}
+		if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2) == TOP)
+		{
+			GameScore_Add(&g_scene.score, RIGHT);
+		}
+	}
 }
 
 //----------------------------------------------------------------------
@@ -253,7 +250,7 @@ void RenderGameSceneDemo(void)
 			GameObject_Render(&g_scene.bullet[i], COLOR_WHITE);
 	}
 	// スコア描画
-	GameScore_Render(&g_scene.score, &g_scene.field, g_resources.font_pong);
+	GameScore_Render(&g_scene.score, &g_scene.field, &g_resources);
 }
 
 // <ゲームの描画処理:シーン:プレイ> -------------------------------------------
@@ -262,8 +259,10 @@ void RenderGameScenePlay(void)
 	// <オブジェクト描画>
 	// フィールド描画
 	GameObject_Field_Render(&g_scene.field);
+	// タイム描画
+	GameTimer_Render(&g_scene.timer, &g_scene.field, &g_resources);
 	// スコア描画
-	GameScore_Render(&g_scene.score, &g_scene.field, g_resources.font_pong);
+	GameScore_Render(&g_scene.score, &g_scene.field, &g_resources);
 	// シップ描画
 	GameObject_Render(&g_scene.ship1, COLOR_WHITE);
 	GameObject_Render(&g_scene.ship2, COLOR_WHITE);

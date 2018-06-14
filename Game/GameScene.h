@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "GameTimer.h"
 #include "GameScore.h"
 
 // 列挙型の定義 ============================================================
@@ -39,6 +40,9 @@ typedef struct
 
 	// <シップ2>
 	GameObject ship2;
+
+	// <得点>
+	GameTimer timer;
 
 	// <得点>
 	GameScore score;
