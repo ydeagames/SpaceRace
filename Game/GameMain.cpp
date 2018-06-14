@@ -14,7 +14,6 @@
 #include "GameControllers.h"
 #include "GameScore.h"
 #include "GameResource.h"
-#include "GameMenu.h"
 #include "GameScene.h"
 
 
@@ -67,25 +66,25 @@ void InitializeGame(void)
 	// フィールド
 	g_scene.field = GameObject_Field_Create();
 
-	// ボール
+	// 弾
 	{
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
 		{
-			g_scene.bullet[i] = GameObject_Bullet_Create();
-			GameObject_Bullet_SetPosXDefault(&g_scene.bullet, &g_scene.field);
-			GameObject_Bullet_SetPosYDefault(&g_scene.bullet, &g_scene.field);
-			GameObject_Bullet_SetVelXDefault(&g_scene.bullet);
+			GameObject* obj = &(g_scene.bullet[i] = GameObject_Bullet_Create());
+			GameObject_Bullet_SetPosXDefault(obj, &g_scene.field);
+			GameObject_Bullet_SetPosYDefault(obj, &g_scene.field);
+			GameObject_Bullet_SetVelXDefault(obj);
 		}
 	}
 
-	// パドル1
+	// シップ1
 	g_scene.ship1 = GameObject_Ship_Create();
 	GameObject_SetX(&g_scene.ship1, RIGHT, SCREEN_LEFT, 64);
 	GameObject_Ship_SetPosYDefault(&g_scene.ship1);
 	g_controllers.paddle1 = GameController_Player_Create(&g_scene.ship1, &g_scene, &g_scene.ship2, PAD_INPUT_8, PAD_INPUT_5);
 
-	// パドル2
+	// シップ2
 	g_scene.ship2 = GameObject_Ship_Create();
 	GameObject_SetX(&g_scene.ship2, LEFT, SCREEN_RIGHT, 64);
 	GameObject_Ship_SetPosYDefault(&g_scene.ship2);
@@ -129,21 +128,17 @@ void UpdateGameSceneDemo(void)
 	// 待機&初期化
 	{
 		// 入力されたら
-		if (IsButtonDown(PAD_INPUT_10) && GameMenu_OnPressed(&g_menu))
+		if (IsButtonDown(PAD_INPUT_10))
 		{
 			// 点数リセット
 			GameScore_Clear(&g_scene.score);
 
-			// X座標を画面中央へ戻す
-			GameObject_Ball_SetPosXDefault(&g_scene.bullet, &g_scene.field);
-
-			// パドルを初期位置へ
-			GameObject_Paddle_SetPosYDefault(&g_scene.ship1);
-			GameObject_Paddle_SetPosYDefault(&g_scene.ship2);
+			// シップを初期位置へ
+			GameObject_Ship_SetPosYDefault(&g_scene.ship1);
+			GameObject_Ship_SetPosYDefault(&g_scene.ship2);
 
 			// シーンをプレイに変更
 			g_scene.game_state = STATE_PLAY;
-			g_scene.packet = PACKET_START;
 		}
 	}
 
@@ -152,14 +147,18 @@ void UpdateGameSceneDemo(void)
 	GameController_Update(&g_controllers.paddle2);
 
 	// 座標更新
-	GameObject_UpdatePosition(&g_scene.bullet);
+	{
+		int i;
+		for (i = 0; i < NUM_BULLET; i++)
+			GameObject_UpdatePosition(&g_scene.bullet[i]);
+	}
 
 	// 当たり判定
-	GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.bullet, TRUE);
-	GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet, TRUE);
-
-	// メニュー更新
-	GameMenu_Update(&g_menu);
+	{
+		int i;
+		for (i = 0; i < NUM_BULLET; i++)
+			GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.bullet[i]);
+	}
 }
 
 // <ゲームの更新処理:シーン:プレイ> ------------------------------------
@@ -174,25 +173,35 @@ void UpdateGameScenePlay(void)
 	GameController_UpdateControl(&g_controllers.paddle2);
 
 	// 座標更新
-	GameObject_UpdatePosition(&g_scene.bullet);
+	{
+		int i;
+		for (i = 0; i < NUM_BULLET; i++)
+			GameObject_UpdatePosition(&g_scene.bullet[i]);
+	}
 	GameObject_UpdatePosition(&g_scene.ship1);
 	GameObject_UpdatePosition(&g_scene.ship2);
 
 	// 当たり判定
-	if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.bullet, TRUE))
-		PlaySoundMem(g_resources.sound_se02, DX_PLAYTYPE_BACK);
 	{
-		ObjectSide side = GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet, FALSE);
-		if (side)
+		int i;
+		for (i = 0; i < NUM_BULLET; i++)
 		{
-			UpdateGameScore(side);
-			PlaySoundMem(g_resources.sound_se03, DX_PLAYTYPE_BACK);
+			if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.bullet[i]))
+				PlaySoundMem(g_resources.sound_se02, DX_PLAYTYPE_BACK);
+			{
+				ObjectSide side = GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]);
+				if (side)
+				{
+					UpdateGameScore(side);
+					PlaySoundMem(g_resources.sound_se03, DX_PLAYTYPE_BACK);
+				}
+			}
+			if (GameObject_Ship_CollisionBullet(&g_scene.ship1, &g_scene.bullet[i]) || GameObject_Ship_CollisionBullet(&g_scene.ship2, &g_scene.bullet[i]))
+				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
 		}
 	}
-	if (GameObject_Paddle_CollisionBall(&g_scene.ship1, &g_scene.bullet) || GameObject_Paddle_CollisionBall(&g_scene.ship2, &g_scene.bullet))
-		PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
-	GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, FALSE);
-	GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, FALSE);
+	GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1);
+	GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2);
 }
 
 // <ゲームの更新処理:スコア加算>
@@ -200,23 +209,6 @@ void UpdateGameScore(ObjectSide side)
 {
 	// 得点処理
 	GameScore_Add(&g_scene.score, side);
-
-	if (GameScore_IsFinished(&g_scene.score))
-	{
-		GameObject_Ball_SetPosXDefault(&g_scene.bullet, &g_scene.field);
-		GameObject_Ball_SetVelXDefault(&g_scene.bullet);
-		GameObject_Ball_SetVelYDefault(&g_scene.bullet);
-
-		// シーンをデモに変更
-		g_scene.game_state = STATE_DEMO;
-		g_scene.packet = PACKET_END;
-	}
-	else
-	{
-		// シーンをサーブに変更
-		g_scene.game_state = STATE_SERVE;
-		g_scene.packet = PACKET_SCORE;
-	}
 }
 
 //----------------------------------------------------------------------
@@ -245,8 +237,12 @@ void RenderGameSceneDemo(void)
 	// <オブジェクト描画>
 	// フィールド描画
 	GameObject_Field_Render(&g_scene.field);
-	// ボール描画
-	GameObject_Render(&g_scene.bullet, COLOR_WHITE);
+	// 弾描画
+	{
+		int i;
+		for (i = 0; i < NUM_BULLET; i++)
+			GameObject_Render(&g_scene.bullet[i], COLOR_WHITE);
+	}
 	// スコア描画
 	GameScore_Render(&g_scene.score, &g_scene.field, g_resources.font_pong);
 }
@@ -259,19 +255,14 @@ void RenderGameScenePlay(void)
 	GameObject_Field_Render(&g_scene.field);
 	// スコア描画
 	GameScore_Render(&g_scene.score, &g_scene.field, g_resources.font_pong);
-	// ガイド描画
-	if (g_scene.score.score2 - g_scene.score.score1 >= SCORE_TO_GUID)
-		GameController_RenderGuide(&g_controllers.paddle1);
-	if (g_scene.score.score1 - g_scene.score.score2 >= SCORE_TO_GUID)
-		GameController_RenderGuide(&g_controllers.paddle2);
-	// パドル描画
+	// シップ描画
 	GameObject_Render(&g_scene.ship1, COLOR_WHITE);
 	GameObject_Render(&g_scene.ship2, COLOR_WHITE);
-	// ボール描画
+	// 弾描画
 	{
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
-			GameObject_Render(&g_scene.bullet, COLOR_WHITE);
+			GameObject_Render(&g_scene.bullet[i], COLOR_WHITE);
 	}
 }
 

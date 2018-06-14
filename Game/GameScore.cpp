@@ -31,12 +31,6 @@ void GameScore_Clear(GameScore* score)
 	score->score2 = 0;
 }
 
-// <スコア終了判定>
-BOOL GameScore_IsFinished(GameScore* score)
-{
-	return score->score1 >= SCORE_GOAL || score->score2 >= SCORE_GOAL;
-}
-
 // <スコア描画>
 void GameScore_Render(GameScore* score, GameObject* field, HFNT font)
 {
