@@ -1,9 +1,21 @@
 #pragma once
 
-float GetRandRange(float min, float max);
+float GetRandomF(void);
 
-float GetLoop(float x, float w);
+float GetRandF(float max);
 
-float GetLoopRange(float x, float min, float max);
+int GetRandRange(int min, int max);
 
-float GetAbs(float a);
+float GetRandRangeF(float min, float max);
+
+int GetLoop(int x, int w);
+
+float GetLoopF(float x, float w);
+
+int GetLoopRange(int x, int min, int max);
+
+float GetLoopRangeF(float x, float min, float max);
+
+int GetAbs(int a);
+
+float GetAbsF(float a);

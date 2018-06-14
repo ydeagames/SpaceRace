@@ -84,7 +84,7 @@ void GameObject_Bullet_SetVelXDefault(GameObject* obj);
 GameObject GameObject_Ship_Create(void);
 
 // <パドルオブジェクト座標Yデフォルト>
-void GameObject_Ship_SetPosYDefault(GameObject* obj);
+void GameObject_Ship_SetPosYDefault(GameObject* obj, GameObject* field);
 
 // <パドルオブジェクトボール衝突処理>
 BOOL GameObject_Ship_CollisionBullet(GameObject* ship, GameObject* bullet);

@@ -71,23 +71,23 @@ void InitializeGame(void)
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
 		{
-			GameObject* obj = &(g_scene.bullet[i] = GameObject_Bullet_Create());
-			GameObject_Bullet_SetPosXDefault(obj, &g_scene.field);
-			GameObject_Bullet_SetPosYDefault(obj, &g_scene.field);
-			GameObject_Bullet_SetVelXDefault(obj);
+			g_scene.bullet[i] = GameObject_Bullet_Create();
+			GameObject_Bullet_SetPosXDefault(&g_scene.bullet[i], &g_scene.field);
+			GameObject_Bullet_SetPosYDefault(&g_scene.bullet[i], &g_scene.field);
+			GameObject_Bullet_SetVelXDefault(&g_scene.bullet[i]);
 		}
 	}
 
 	// シップ1
 	g_scene.ship1 = GameObject_Ship_Create();
 	GameObject_SetX(&g_scene.ship1, RIGHT, SCREEN_LEFT, 64);
-	GameObject_Ship_SetPosYDefault(&g_scene.ship1);
+	GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
 	g_controllers.paddle1 = GameController_Player_Create(&g_scene.ship1, &g_scene, &g_scene.ship2, PAD_INPUT_8, PAD_INPUT_5);
 
 	// シップ2
 	g_scene.ship2 = GameObject_Ship_Create();
 	GameObject_SetX(&g_scene.ship2, LEFT, SCREEN_RIGHT, 64);
-	GameObject_Ship_SetPosYDefault(&g_scene.ship2);
+	GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
 	g_controllers.paddle2 = GameController_Player_Create(&g_scene.ship2, &g_scene, &g_scene.ship1, PAD_INPUT_UP, PAD_INPUT_DOWN);
 	//g_controllers.paddle2 = GameController_Bot_Create(&g_scene.paddle2, &g_scene, &g_scene.paddle1);
 
@@ -134,8 +134,8 @@ void UpdateGameSceneDemo(void)
 			GameScore_Clear(&g_scene.score);
 
 			// シップを初期位置へ
-			GameObject_Ship_SetPosYDefault(&g_scene.ship1);
-			GameObject_Ship_SetPosYDefault(&g_scene.ship2);
+			GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
+			GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
 
 			// シーンをプレイに変更
 			g_scene.game_state = STATE_PLAY;
@@ -157,7 +157,7 @@ void UpdateGameSceneDemo(void)
 	{
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
-			GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.bullet[i]);
+			GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]);
 	}
 }
 
@@ -186,7 +186,7 @@ void UpdateGameScenePlay(void)
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
 		{
-			if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.bullet[i]))
+			if (GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]))
 				PlaySoundMem(g_resources.sound_se02, DX_PLAYTYPE_BACK);
 			{
 				ObjectSide side = GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]);
@@ -196,8 +196,17 @@ void UpdateGameScenePlay(void)
 					PlaySoundMem(g_resources.sound_se03, DX_PLAYTYPE_BACK);
 				}
 			}
-			if (GameObject_Ship_CollisionBullet(&g_scene.ship1, &g_scene.bullet[i]) || GameObject_Ship_CollisionBullet(&g_scene.ship2, &g_scene.bullet[i]))
+			if (GameObject_Ship_CollisionBullet(&g_scene.ship1, &g_scene.bullet[i]))
+			{
+				GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
 				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
+			}
+
+			if (GameObject_Ship_CollisionBullet(&g_scene.ship2, &g_scene.bullet[i]))
+			{
+				GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
+				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
+			}
 		}
 	}
 	GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1);

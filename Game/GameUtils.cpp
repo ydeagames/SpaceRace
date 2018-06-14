@@ -1,22 +1,52 @@
 #include "GameUtils.h"
 #include <math.h>
 
-float GetRandRange(float min, float max)
+float GetRandomF(void)
+{
+	return (float)GetRand(RAND_MAX) / RAND_MAX;
+}
+
+float GetRandF(float max)
+{
+	return GetRandomF() * max;
+}
+
+int GetRandRange(int min, int max)
 {
 	return GetRand(max - min) + min;
 }
 
-float GetLoop(float x, float w)
+float GetRandRangeF(float min, float max)
 {
-	return fmodf((fmod(x, w) + w), w);
+	return GetRandF(max - min) + min;
 }
 
-float GetLoopRange(float x, float min, float max)
+int GetLoop(int x, int w)
 {
-	return GetLoop(x, max - min) + min;
+	return ((x % w) + w) % w;
 }
 
-float GetAbs(float a)
+float GetLoopF(float x, float w)
+{
+	return fmodf((fmodf(x, w) + w), w);
+}
+
+int GetLoopRange(int x, int min, int max)
+{
+	return GetLoop(x - min, max - min) + min;
+}
+
+float GetLoopRangeF(float x, float min, float max)
+{
+	return GetLoopF(x - min, max - min) + min;
+}
+
+int GetAbs(int a)
+{
+	return a > 0 ? a : -a;
+}
+
+float GetAbsF(float a)
 {
 	return a > 0 ? a : -a;
 }
