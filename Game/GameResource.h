@@ -20,7 +20,7 @@ typedef struct
 
 // <ƒtƒHƒ“ƒg> ----------------------------------------------------------
 
-#define FONT_SIZE_PONG 100
+#define FONT_SIZE_PONG 80
 #define FONT_SIZE_MENU 20
 #define FONT_SIZE_NOTE 12
 

@@ -77,16 +77,15 @@ void InitializeGame(void)
 
 	// シップ1
 	g_scene.ship1 = GameObject_Ship_Create();
-	GameObject_SetX(&g_scene.ship1, RIGHT, SCREEN_LEFT, 64);
+	GameObject_SetX(&g_scene.ship1, LEFT, GameObject_GetX(&g_scene.field, CENTER_X), 80);
 	GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
 	g_controllers.paddle1 = GameController_Player_Create(&g_scene.ship1, &g_scene, &g_scene.ship2, PAD_INPUT_8, PAD_INPUT_5);
 
 	// シップ2
 	g_scene.ship2 = GameObject_Ship_Create();
-	GameObject_SetX(&g_scene.ship2, LEFT, SCREEN_RIGHT, 64);
+	GameObject_SetX(&g_scene.ship2, RIGHT, GameObject_GetX(&g_scene.field, CENTER_X), 80);
 	GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
 	g_controllers.paddle2 = GameController_Player_Create(&g_scene.ship2, &g_scene, &g_scene.ship1, PAD_INPUT_UP, PAD_INPUT_DOWN);
-	//g_controllers.paddle2 = GameController_Bot_Create(&g_scene.paddle2, &g_scene, &g_scene.paddle1);
 
 	// リソース
 	g_resources = GameResource_Create();

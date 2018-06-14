@@ -40,6 +40,6 @@ void GameScore_Render(GameScore* score, GameObject* field, GameResource* resourc
 	// フォントを使用した文字の幅を取得
 	int width_score1 = GetDrawFormatStringWidthToHandle(resources->font_pong, "%2d", score->score1);
 
-	DrawFormatStringToHandle((int)GameObject_GetX(field, LEFT, (float)(100 + width_score1)), (int)GameObject_GetY(field, BOTTOM, FONT_SIZE_PONG + 10), COLOR_WHITE, resources->font_pong, "%2d", score->score1);
-	DrawFormatStringToHandle((int)GameObject_GetX(field, RIGHT, 100), (int)GameObject_GetY(field, BOTTOM, FONT_SIZE_PONG + 10), COLOR_WHITE, resources->font_pong, "%2d", score->score2);
+	DrawFormatStringToHandle((int)(GameObject_GetX(field, CENTER_X) - (100 + width_score1)), (int)GameObject_GetY(field, BOTTOM, -FONT_SIZE_PONG - 10), COLOR_WHITE, resources->font_pong, "%2d", score->score1);
+	DrawFormatStringToHandle((int)(GameObject_GetX(field, CENTER_X) + 100), (int)GameObject_GetY(field, BOTTOM, -FONT_SIZE_PONG - 10), COLOR_WHITE, resources->font_pong, "%2d", score->score2);
 }
