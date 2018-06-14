@@ -10,9 +10,9 @@
 #define FONT_NAME_NOTE "HGS創英ﾌﾟﾚｾﾞﾝｽEB"
 
 // <サウンド> ----------------------------------------------------------
-#define SOUND_SE01 "Resources\\Audio\\SE01.ogg"
-#define SOUND_SE02 "Resources\\Audio\\SE02.ogg"
-#define SOUND_SE03 "Resources\\Audio\\SE03.ogg"
+#define SOUND_SE01 "Resources\\Audio\\se_dead.ogg"
+#define SOUND_SE02 "Resources\\Audio\\se_player.ogg"
+#define SOUND_SE03 "Resources\\Audio\\se_player.ogg"
 
 // 関数の定義 ==============================================================
 

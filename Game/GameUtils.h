@@ -19,3 +19,11 @@ float GetLoopRangeF(float x, float min, float max);
 int GetAbs(int a);
 
 float GetAbsF(float a);
+
+float GetPercentage(float x, float max);
+
+float GetPercentageRange(float x, float min, float max);
+
+float GetPercentValue(float percent, float max);
+
+float GetPercentValue(float percent, float min, float max);

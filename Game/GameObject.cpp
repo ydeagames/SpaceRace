@@ -9,8 +9,8 @@
 #define BULLET_HEIGHT 8
 
 // <シップ>
-#define PADDLE_WIDTH  8
-#define PADDLE_HEIGHT 28
+#define ship_WIDTH  8
+#define ship_HEIGHT 28
 
 // 関数の定義 ==============================================================
 
@@ -133,7 +133,7 @@ void GameObject_Bullet_SetVelXDefault(GameObject* obj)
 // <シップオブジェクト作成>
 GameObject GameObject_Ship_Create(void)
 {
-	return GameObject_Create(Vec2_Create(), Vec2_Create(), Vec2_Create(PADDLE_WIDTH, PADDLE_HEIGHT));
+	return GameObject_Create(Vec2_Create(), Vec2_Create(), Vec2_Create(ship_WIDTH, ship_HEIGHT));
 }
 
 // <シップオブジェクト座標Yデフォルト>
@@ -143,9 +143,9 @@ void GameObject_Ship_SetPosYDefault(GameObject* obj, GameObject* field)
 }
 
 // <シップオブジェクト弾衝突処理>
-BOOL GameObject_Ship_CollisionBullet(GameObject* paddle, GameObject* ball)
+BOOL GameObject_Ship_CollisionBullet(GameObject* ship, GameObject* bullet)
 {
-	if (GameObject_IsHit(ball, paddle))
+	if (GameObject_IsHit(bullet, ship))
 	{
 
 		return TRUE;

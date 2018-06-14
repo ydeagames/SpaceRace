@@ -15,6 +15,7 @@
 #include "GameScore.h"
 #include "GameResource.h"
 #include "GameScene.h"
+#include "GameSoundShip.h"
 
 
 // 定数の定義 ==============================================================
@@ -33,6 +34,10 @@ GameControllers g_controllers;
 
 // <リソース> ----------------------------------------------------------
 GameResource g_resources;
+
+// <サウンド> ----------------------------------------------------------
+GameSoundShip g_ship1_sound;
+GameSoundShip g_ship2_sound;
 
 
 // 関数の宣言 ==============================================================
@@ -90,6 +95,10 @@ void InitializeGame(void)
 	// リソース
 	g_resources = GameResource_Create();
 
+	// シップサウンド
+	g_ship1_sound = GameSoundShip_Create(&g_scene.field, &g_scene.ship1, g_resources.sound_se02, SOUND_SHIP1_INTERVAL);
+	g_ship2_sound = GameSoundShip_Create(&g_scene.field, &g_scene.ship2, g_resources.sound_se03, SOUND_SHIP2_INTERVAL);
+
 	// タイマー
 	g_scene.timer = GameTimer_Create();
 
@@ -139,6 +148,10 @@ void UpdateGameSceneDemo(void)
 			GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
 			GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
 
+			// サウンド再生
+			GameSoundShip_Start(&g_ship1_sound);
+			GameSoundShip_Start(&g_ship2_sound);
+
 			// シーンをプレイに変更
 			g_scene.game_state = STATE_PLAY;
 		}
@@ -183,13 +196,16 @@ void UpdateGameScenePlay(void)
 	GameObject_UpdatePosition(&g_scene.ship1);
 	GameObject_UpdatePosition(&g_scene.ship2);
 
+	// サウンド更新
+	GameSoundShip_Update(&g_ship1_sound);
+	GameSoundShip_Update(&g_ship2_sound);
+
 	// 当たり判定
 	{
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
 		{
-			if (GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]))
-				PlaySoundMem(g_resources.sound_se02, DX_PLAYTYPE_BACK);
+			GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]);
 
 			if (GameObject_Ship_CollisionBullet(&g_scene.ship1, &g_scene.bullet[i]))
 			{

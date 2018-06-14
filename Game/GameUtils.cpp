@@ -50,3 +50,24 @@ float GetAbsF(float a)
 {
 	return a > 0 ? a : -a;
 }
+
+float GetPercentage(float x, float max)
+{
+	float n = ClampF(x, 0, max);
+	return n / max;
+}
+
+float GetPercentageRange(float x, float min, float max)
+{
+	return GetPercentage(x - min, max - min);
+}
+
+float GetPercentValue(float percent, float max)
+{
+	return max * percent;
+}
+
+float GetPercentValue(float percent, float min, float max)
+{
+	return GetPercentValue(percent, max - min);
+}
