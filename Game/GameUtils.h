@@ -26,4 +26,4 @@ float GetPercentageRange(float x, float min, float max);
 
 float GetPercentValue(float percent, float max);
 
-float GetPercentValue(float percent, float min, float max);
+float GetPercentValueRange(float percent, float min, float max);

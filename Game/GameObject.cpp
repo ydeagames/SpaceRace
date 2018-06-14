@@ -119,7 +119,7 @@ void GameObject_Bullet_SetPosXDefault(GameObject* obj, GameObject* field)
 // <弾オブジェクト座標Yデフォルト>
 void GameObject_Bullet_SetPosYDefault(GameObject* obj, GameObject* field)
 {
-	obj->pos.y = GetRandRangeF(GameObject_GetY(field, TOP), GameObject_GetY(field, BOTTOM));
+	obj->pos.y = GetRandRangeF(GameObject_GetY(field, TOP), GameObject_GetY(field, BOTTOM, -85));
 }
 
 // <弾オブジェクト移動Xデフォルト>

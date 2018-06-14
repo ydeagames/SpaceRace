@@ -67,7 +67,7 @@ float GetPercentValue(float percent, float max)
 	return max * percent;
 }
 
-float GetPercentValue(float percent, float min, float max)
+float GetPercentValueRange(float percent, float min, float max)
 {
 	return GetPercentValue(percent, max - min);
 }

@@ -1,4 +1,5 @@
 #include "GameTimer.h"
+#include "GameUtils.h"
 
 // 定数の定義 ==============================================================
 
@@ -85,7 +86,7 @@ BOOL GameTimer_IsFinished(GameTimer* timer)
 // <タイマー描画>
 void GameTimer_Render(GameTimer* timer, GameObject* field, GameResource* resources)
 {
-	float length = (GameTimer_GetTimeRemaining(timer) / GAME_DURATION_SECONDS) * field->size.y;
+	float length = GetPercentValueRange(GetPercentage(GameTimer_GetTimeRemaining(timer), GAME_DURATION_SECONDS), GameObject_GetY(field, TOP), GameObject_GetY(field, BOTTOM));
 	GameObject timebar = *field;
 	timebar.size.x = 6;
 	timebar.size.y = length;
