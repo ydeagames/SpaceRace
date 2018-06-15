@@ -47,7 +47,8 @@ typedef struct
 	// <得点>
 	GameScore score;
 
-	// <サーブ待機>
-	int counter;
+	// <シップ待機>
+	int ship1_counter;
+	int ship2_counter;
 } GameScene;
 

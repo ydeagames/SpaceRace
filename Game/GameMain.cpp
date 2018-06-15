@@ -21,7 +21,7 @@
 // 定数の定義 ==============================================================
 
 // <サーブ待機> --------------------------------------------------------
-#define SERVE_WAIT_TIME 2*60
+#define SHIP_WAIT_TIME 60
 
 
 // グローバル変数の宣言 ====================================================
@@ -106,7 +106,8 @@ void InitializeGame(void)
 	g_scene.score = GameScore_Create();
 
 	// サーブ待機
-	g_scene.counter = 0;
+	g_scene.ship1_counter = 0;
+	g_scene.ship2_counter = 0;
 }
 
 
@@ -184,8 +185,10 @@ void UpdateGameScenePlay(void)
 	GameController_Update(&g_controllers.paddle2);
 
 	// 操作
-	GameController_UpdateControl(&g_controllers.paddle1);
-	GameController_UpdateControl(&g_controllers.paddle2);
+	if (g_scene.ship1_counter<=0)
+		GameController_UpdateControl(&g_controllers.paddle1);
+	if (g_scene.ship2_counter<=0)
+		GameController_UpdateControl(&g_controllers.paddle2);
 
 	// 座標更新
 	{
@@ -210,12 +213,14 @@ void UpdateGameScenePlay(void)
 			if (GameObject_Ship_CollisionBullet(&g_scene.ship1, &g_scene.bullet[i]))
 			{
 				GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
+				g_scene.ship1_counter = SHIP_WAIT_TIME;
 				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
 			}
 
 			if (GameObject_Ship_CollisionBullet(&g_scene.ship2, &g_scene.bullet[i]))
 			{
 				GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
+				g_scene.ship2_counter = SHIP_WAIT_TIME;
 				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
 			}
 		}
@@ -230,6 +235,12 @@ void UpdateGameScenePlay(void)
 			GameScore_Add(&g_scene.score, RIGHT);
 		}
 	}
+
+	// サーブ待機
+	if (g_scene.ship1_counter>0)
+		g_scene.ship1_counter--;
+	if (g_scene.ship2_counter>0)
+		g_scene.ship2_counter--;
 }
 
 //----------------------------------------------------------------------
@@ -279,8 +290,10 @@ void RenderGameScenePlay(void)
 	// スコア描画
 	GameScore_Render(&g_scene.score, &g_scene.field, &g_resources);
 	// シップ描画
-	GameObject_Render(&g_scene.ship1, COLOR_WHITE);
-	GameObject_Render(&g_scene.ship2, COLOR_WHITE);
+	if (g_scene.ship1_counter<=0)
+		GameObject_Render(&g_scene.ship1, COLOR_WHITE);
+	if (g_scene.ship2_counter<=0)
+		GameObject_Render(&g_scene.ship2, COLOR_WHITE);
 	// 弾描画
 	{
 		int i;

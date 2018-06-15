@@ -19,7 +19,7 @@
 // <オブジェクト作成>
 GameObject GameObject_Create(Vec2 pos, Vec2 vel, Vec2 size)
 {
-	return { pos, vel, size };
+	return{ pos, vel, size };
 }
 
 // <オブジェクト座標更新>
@@ -125,7 +125,7 @@ void GameObject_Bullet_SetPosYDefault(GameObject* obj, GameObject* field)
 // <弾オブジェクト移動Xデフォルト>
 void GameObject_Bullet_SetVelXDefault(GameObject* obj)
 {
-	obj->vel.x = (float)(GetRand(1) * 2 - 1);
+	obj->vel.x = (float)(GetRand(1) * 2 - 1)*BULLET_VEL;
 }
 
 // <<シップオブジェクト>> ----------------------------------------------
