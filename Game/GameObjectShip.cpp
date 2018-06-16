@@ -2,7 +2,7 @@
 
 // 定数の定義 ==============================================================
 
-// <リスポーン待機> ----------------------------------------------------
+// <リスポーン待機>
 #define SHIP_WAIT_TIME 60
 
 // 関数の定義 ==============================================================
@@ -73,8 +73,8 @@ void GameObjectShip_Render(GameObjectShip* ship, GameObject* field)
 			lower.pos.y -= lower.size.y;
 			GameObject_Field_CollisionVertical(field, &lower, CONNECTION_LOOP, EDGESIDE_CENTER);
 			lower.pos.y += lower.size.y;
-			GameObject_Render(&lower, COLOR_WHITE);
+			GameObject_Render(&lower);
 		}
-		GameObject_Render(&ship->ship, COLOR_WHITE);
+		GameObject_Render(&ship->ship);
 	}
 }

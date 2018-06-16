@@ -292,7 +292,7 @@ void RenderGameSceneDemo(void)
 	{
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
-			GameObject_Render(&g_scene.bullet[i], COLOR_WHITE);
+			GameObject_Render(&g_scene.bullet[i]);
 	}
 	// ƒ^ƒCƒ€•`‰æ
 	GameTimer_Render(&g_scene.timer, &g_scene.field, &g_resources);
@@ -320,7 +320,7 @@ void RenderGameScenePlay(void)
 	{
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
-			GameObject_Render(&g_scene.bullet[i], COLOR_WHITE);
+			GameObject_Render(&g_scene.bullet[i]);
 	}
 }
 

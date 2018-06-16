@@ -4,6 +4,9 @@
 
 // 定数の定義 ==============================================================
 
+// <デバッグ用当たり判定表示>
+#define DEBUG_HITBOX TRUE
+
 // <弾>
 #define BULLET_WIDTH 8
 #define BULLET_HEIGHT 8
@@ -14,12 +17,26 @@
 
 // 関数の定義 ==============================================================
 
+// <<スプライト>> ------------------------------------------------------
+
+// <スプライト作成>
+GameSprite GameSprite_Create(HGRP texture, Vec2 anchor, Vec2 size, Vec2 offset, float scale, float angle)
+{
+	return { COLOR_WHITE, texture, anchor, size, offset, scale, angle };
+}
+
+// <スプライトなし>
+GameSprite GameSprite_CreateNone()
+{
+	return GameSprite_Create(TEXTURE_NONE, Vec2_Create(), Vec2_Create(), Vec2_Create());
+}
+
 // <<オブジェクト>> ----------------------------------------------------
 
 // <オブジェクト作成>
 GameObject GameObject_Create(Vec2 pos, Vec2 vel, Vec2 size)
 {
-	return{ pos, vel, size };
+	return{ pos, vel, size, GameSprite_CreateNone() };
 }
 
 // <オブジェクト座標更新>
@@ -85,9 +102,25 @@ BOOL GameObject_IsHit(GameObject* obj1, GameObject* obj2)
 }
 
 // <オブジェクト描画>
-void GameObject_Render(GameObject* obj, unsigned int color)
+void GameObject_Render(GameObject* obj)
 {
-	DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), color, TRUE);
+	if (obj->sprite.texture == TEXTURE_NONE)
+		DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), obj->sprite.color, TRUE);
+	else
+	{
+		if (DEBUG_HITBOX)
+			DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), obj->sprite.color, TRUE);
+		DrawRectRotaGraph2F(
+			GameObject_GetX(obj, CENTER_X), GameObject_GetY(obj, CENTER_Y),
+			(int)obj->sprite.texture_anchor.x, (int)obj->sprite.texture_anchor.y,
+			(int)obj->sprite.texture_size.x, (int)obj->sprite.texture_size.y,
+			obj->sprite.offset.x, obj->sprite.offset.y,
+			(double)obj->sprite.scale,
+			(double)obj->sprite.angle,
+			obj->sprite.texture,
+			TRUE
+		);
+	}
 }
 
 // <<弾オブジェクト>> ----------------------------------------------

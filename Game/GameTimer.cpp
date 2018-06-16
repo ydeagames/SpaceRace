@@ -95,5 +95,5 @@ void GameTimer_Render(GameTimer* timer, GameObject* field, GameResource* resourc
 	timebar.size.y = length;
 	timebar.pos.y = field->pos.y + (field->size.y - length) / 2;
 
-	GameObject_Render(&timebar, COLOR_WHITE);
+	GameObject_Render(&timebar);
 }

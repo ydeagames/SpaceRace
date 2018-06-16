@@ -7,12 +7,12 @@
 enum ObjectSide
 {
 	NONE = 0,
-	CENTER_X = 1,	// X中央
-	LEFT = -2,		// 左
-	RIGHT = 2,		// 右
-	CENTER_Y = -1,	// Y中央
-	TOP = -3,		// 上
-	BOTTOM = 3		// 下
+	CENTER_X = 1,				// X中央
+	LEFT = -2,					// 左
+	RIGHT = 2,					// 右
+	CENTER_Y = -1,				// Y中央
+	TOP = -3,					// 上
+	BOTTOM = 3					// 下
 };
 
 // <縁の位置> ----------------------------------------------------------
@@ -20,34 +20,58 @@ enum ObjectEdgeSide
 {
 	EDGESIDE_CENTER = 0,		// 縁の上
 	EDGESIDE_OUTER = -1,		// 縁の外側
-	EDGESIDE_INNER = 1		// 縁の内側
+	EDGESIDE_INNER = 1			// 縁の内側
 };
 
 // <ワールドのつながり> ------------------------------------------------
 enum ObjectConnection
 {
 	CONNECTION_NONE = 0,		// 繋がりなし、見えない空間に移動
-	CONNECTION_BARRIER,		// 壁があり、進めない
-	CONNECTION_LOOP			// 反対側から出てくる
+	CONNECTION_BARRIER,			// 壁があり、進めない
+	CONNECTION_LOOP				// 反対側から出てくる
 };
 
 // 構造体の宣言 ============================================================
 
+// <スプライトオブジェクト>
+typedef struct
+{
+	unsigned int color;			// <色>
+	HGRP texture;				// <テクスチャ>
+	Vec2 texture_anchor;		// <テクスチャ基点>
+	Vec2 texture_size;			// <テクスチャサイズ>
+	Vec2 offset;				// <オフセット>
+	float scale;				// <スケール>
+	float angle;				// <回転>
+} GameSprite;
+
 // <ゲームオブジェクト>
 typedef struct
 {
-	Vec2 pos;	// <位置>
-	Vec2 vel;	// <速度>
-	Vec2 size;	// <大きさ>
+	Vec2 pos;					// <位置>
+	Vec2 vel;					// <速度>
+	Vec2 size;					// <大きさ>
+	GameSprite sprite;			// <スプライト>
 } GameObject;
 
 // 定数の定義 ==============================================================
 
+// <テクスチャ>
+#define TEXTURE_NONE -1			// テクスチャなし
 // <シップ>
-#define SHIP_VEL 4		// シップの速度
-#define BULLET_VEL 2	// 弾の速度
+#define SHIP_VEL 4				// シップの速度
+// <弾>
+#define BULLET_VEL 2			// 弾の速度
 
 // 関数の宣言 ==============================================================
+
+// <<スプライト>> ------------------------------------------------------
+
+// <スプライト作成>
+GameSprite GameSprite_Create(HGRP texture, Vec2 anchor, Vec2 size, Vec2 offset, float scale = 1, float angle = 0);
+
+// <スプライトなし>
+GameSprite GameSprite_CreateNone();
 
 // <<オブジェクト>> ----------------------------------------------------
 
@@ -73,7 +97,7 @@ float GameObject_GetY(GameObject* obj, ObjectSide side, float margin = 0.f);
 BOOL GameObject_IsHit(GameObject* obj1, GameObject* obj2);
 
 // <オブジェクト描画>
-void GameObject_Render(GameObject* obj, unsigned int color);
+void GameObject_Render(GameObject* obj);
 
 // <<弾オブジェクト>> ----------------------------------------------
 
