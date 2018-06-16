@@ -92,7 +92,7 @@ GameSprite GameSprite_CreateNone();
 // <<オブジェクト>> ----------------------------------------------------
 
 // <オブジェクト作成>
-GameObject GameObject_Create(Vec2 pos, Vec2 vel, Vec2 size);
+GameObject GameObject_Create(Vec2 pos = Vec2_Create(), Vec2 vel = Vec2_Create(), Vec2 size = Vec2_Create());
 
 // <オブジェクト座標更新>
 void GameObject_UpdatePosition(GameObject* obj);

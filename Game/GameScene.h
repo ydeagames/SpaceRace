@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "GameTimer.h"
+#include "GameTimerBar.h"
 #include "GameScore.h"
 #include "GameObjectShip.h"
 
@@ -40,8 +40,8 @@ typedef struct
 	// <シップ>
 	GameObjectShip ship[NUM_SHIP];
 
-	// <得点>
-	GameTimer timer;
+	// <残り時間>
+	GameTimerBar timerbar;
 
 	// <得点>
 	GameScore score;

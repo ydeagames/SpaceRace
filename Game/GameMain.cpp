@@ -10,11 +10,9 @@
 
 // ヘッダファイルの読み込み ================================================
 #include "GameMain.h"
-#include "GameObject.h"
-#include "GameScore.h"
 #include "GameResource.h"
-#include "GameScene.h"
 #include "GameSoundShip.h"
+#include "GameScene.h"
 
 
 // グローバル変数の宣言 ====================================================
@@ -117,8 +115,16 @@ void InitializeGame(void)
 		}
 
 		// タイマー
-		g_scene.timer = GameTimer_Create();
-		GameTimer_SetRemainingDefault(&g_scene.timer);
+		{
+			// 旗スプライト
+			GameSprite sprite = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(143, 10), Vec2_Create(16, 26)));
+			sprite.scale = 2;
+			sprite.texture.center.x = 1;
+			sprite.texture.center.y = sprite.texture.size.y;
+
+			g_scene.timerbar = GameTimerBar_Create(&g_scene.field, sprite);
+			GameTimer_SetRemainingDefault(&g_scene.timerbar.timer);
+		}
 
 		// 得点
 		g_scene.score = GameScore_Create();
@@ -155,7 +161,7 @@ void UpdateGameSceneDemo(void)
 		if (IsButtonDown(PAD_INPUT_10))
 		{
 			// タイマーを開始
-			GameTimer_Resume(&g_scene.timer);
+			GameTimer_Resume(&g_scene.timerbar.timer);
 
 			// 点数リセット
 			GameScore_Clear(&g_scene.score);
@@ -264,11 +270,11 @@ void UpdateGameScenePlay(void)
 	}
 
 	// 終了判定
-	if (GameTimer_IsFinished(&g_scene.timer))
+	if (GameTimer_IsFinished(&g_scene.timerbar.timer))
 	{
 		// タイマー停止初期化
-		GameTimer_Pause(&g_scene.timer);
-		GameTimer_SetRemainingDefault(&g_scene.timer);
+		GameTimer_Pause(&g_scene.timerbar.timer);
+		GameTimer_SetRemainingDefault(&g_scene.timerbar.timer);
 
 		// サウンド停止
 		GameSoundShip_Stop(&g_ship1_sound);
@@ -312,7 +318,7 @@ void RenderGameSceneDemo(void)
 			GameObject_Render(&g_scene.bullet[i]);
 	}
 	// タイム描画
-	GameTimer_Render(&g_scene.timer, &g_scene.field, &g_resources);
+	GameTimerBar_Render(&g_scene.timerbar);
 	// スコア描画
 	GameScore_Render(&g_scene.score, &g_scene.field, &g_resources);
 }
@@ -324,7 +330,7 @@ void RenderGameScenePlay(void)
 	// フィールド描画
 	GameObject_Field_Render(&g_scene.field);
 	// タイム描画
-	GameTimer_Render(&g_scene.timer, &g_scene.field, &g_resources);
+	GameTimerBar_Render(&g_scene.timerbar);
 	// スコア描画
 	GameScore_Render(&g_scene.score, &g_scene.field, &g_resources);
 	// シップ描画

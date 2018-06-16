@@ -1,6 +1,4 @@
 #pragma once
-#include "GameObject.h"
-#include "GameResource.h"
 
 // 構造体の宣言 ============================================================
 
@@ -11,6 +9,10 @@ typedef struct
 	int last_time;	// 終了時間
 	BOOL paused;	// 一時停止
 } GameTimer;
+
+// 定数の定義 ==============================================================
+
+#define GAME_DURATION_SECONDS 60
 
 // 関数の宣言 ==============================================================
 
@@ -49,6 +51,3 @@ float GameTimer_GetTimeRemaining(GameTimer* timer);
 
 // <タイマー終了判定>
 BOOL GameTimer_IsFinished(GameTimer* timer);
-
-// <タイマー描画>
-void GameTimer_Render(GameTimer* timer, GameObject* field, GameResource* resources);

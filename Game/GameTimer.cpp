@@ -1,10 +1,8 @@
 #include "GameTimer.h"
-#include "GameUtils.h"
 
 // 定数の定義 ==============================================================
 
 #define RESOLUTION 1000
-#define GAME_DURATION_SECONDS 60
 
 // 関数の定義 ==============================================================
 
@@ -84,16 +82,4 @@ float GameTimer_GetTimeRemaining(GameTimer* timer)
 BOOL GameTimer_IsFinished(GameTimer* timer)
 {
 	return GameTimer_GetTime(timer) >= 0;
-}
-
-// <タイマー描画>
-void GameTimer_Render(GameTimer* timer, GameObject* field, GameResource* resources)
-{
-	float length = GetPercentValueRange(GetPercentage(GameTimer_GetTimeRemaining(timer), GAME_DURATION_SECONDS), GameObject_GetY(field, TOP), GameObject_GetY(field, BOTTOM));
-	GameObject timebar = *field;
-	timebar.size.x = 6;
-	timebar.size.y = length;
-	timebar.pos.y = field->pos.y + (field->size.y - length) / 2;
-
-	GameObject_Render(&timebar);
 }
