@@ -173,7 +173,7 @@ void UpdateGameSceneDemo(void)
 	{
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
-			GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]);
+			GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i], CONNECTION_LOOP, EDGESIDE_OUTER);
 	}
 }
 
@@ -208,7 +208,7 @@ void UpdateGameScenePlay(void)
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
 		{
-			GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i]);
+			GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i], CONNECTION_LOOP, EDGESIDE_OUTER);
 
 			if (GameObject_Ship_CollisionBullet(&g_scene.ship1, &g_scene.bullet[i]))
 			{
@@ -228,13 +228,23 @@ void UpdateGameScenePlay(void)
 		}
 	}
 	{
-		if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, FALSE, FALSE) == TOP)
 		{
-			GameScore_Add(&g_scene.score, LEFT);
+			if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_NONE, EDGESIDE_OUTER) == TOP)
+			{
+				GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_LOOP, EDGESIDE_CENTER);
+				GameScore_Add(&g_scene.score, LEFT);
+			}
+			else if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_NONE, EDGESIDE_INNER) == BOTTOM)
+				GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_BARRIER, EDGESIDE_INNER);
 		}
-		if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, FALSE, FALSE) == TOP)
 		{
-			GameScore_Add(&g_scene.score, RIGHT);
+			if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_NONE, EDGESIDE_OUTER) == TOP)
+			{
+				GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_LOOP, EDGESIDE_CENTER);
+				GameScore_Add(&g_scene.score, RIGHT);
+			}
+			else if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_NONE, EDGESIDE_INNER) == BOTTOM)
+				GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_BARRIER, EDGESIDE_INNER);
 		}
 	}
 
@@ -298,19 +308,28 @@ void RenderGameScenePlay(void)
 	// ƒVƒbƒv•`‰æ
 	if (g_scene.ship1_counter <= 0)
 	{
+		if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_NONE, EDGESIDE_INNER) == TOP)
 		{
-			GameObject field = g_scene.field;
 			GameObject lower = g_scene.ship1;
-			field.size.y -= lower.size.y;
 			lower.pos.y -= lower.size.y;
-			GameObject_Field_CollisionVertical(&field, &lower, TRUE, FALSE);
+			GameObject_Field_CollisionVertical(&g_scene.field, &lower, CONNECTION_LOOP, EDGESIDE_CENTER);
 			lower.pos.y += lower.size.y;
 			GameObject_Render(&lower, COLOR_WHITE);
 		}
 		GameObject_Render(&g_scene.ship1, COLOR_WHITE);
 	}
-	if (g_scene.ship2_counter<=0)
+	if (g_scene.ship2_counter <= 0)
+	{
+		if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_NONE, EDGESIDE_INNER) == TOP)
+		{
+			GameObject lower = g_scene.ship2;
+			lower.pos.y -= lower.size.y;
+			GameObject_Field_CollisionVertical(&g_scene.field, &lower, CONNECTION_LOOP, EDGESIDE_CENTER);
+			lower.pos.y += lower.size.y;
+			GameObject_Render(&lower, COLOR_WHITE);
+		}
 		GameObject_Render(&g_scene.ship2, COLOR_WHITE);
+	}
 	// ’e•`‰æ
 	{
 		int i;

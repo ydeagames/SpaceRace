@@ -30,47 +30,47 @@ void GameObject_UpdatePosition(GameObject* obj)
 }
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetX(GameObject* obj, ObjectSide side, float pos, float margin)
+float GameObject_OffsetX(GameObject* obj, ObjectSide side, float pos, float padding)
 {
 	float offset = 0;
 	switch (side)
 	{
 	case LEFT:
-		offset = -(margin + obj->size.x / 2.f);
+		offset = -(padding + obj->size.x / 2.f);
 		break;
 	case RIGHT:
-		offset = (margin + obj->size.x / 2.f);
+		offset = (padding + obj->size.x / 2.f);
 		break;
 	}
 	return pos + offset;
 }
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetY(GameObject* obj, ObjectSide side, float pos, float margin)
+float GameObject_OffsetY(GameObject* obj, ObjectSide side, float pos, float padding)
 {
 	float offset = 0;
 	switch (side)
 	{
 	case TOP:
-		offset = -(margin + obj->size.y / 2.f);
+		offset = -(padding + obj->size.y / 2.f);
 		break;
 	case BOTTOM:
-		offset = (margin + obj->size.y / 2.f);
+		offset = (padding + obj->size.y / 2.f);
 		break;
 	}
 	return pos + offset;
 }
 
 // <オブジェクトX位置ゲット>
-float GameObject_GetX(GameObject* obj, ObjectSide side, float margin)
+float GameObject_GetX(GameObject* obj, ObjectSide side, float padding)
 {
-	return GameObject_OffsetX(obj, side, obj->pos.x, margin);
+	return GameObject_OffsetX(obj, side, obj->pos.x, padding);
 }
 
 // <オブジェクトY位置ゲット>
-float GameObject_GetY(GameObject* obj, ObjectSide side, float margin)
+float GameObject_GetY(GameObject* obj, ObjectSide side, float padding)
 {
-	return GameObject_OffsetY(obj, side, obj->pos.y, margin);
+	return GameObject_OffsetY(obj, side, obj->pos.y, padding);
 }
 
 // <オブジェクト当たり判定>
@@ -151,54 +151,86 @@ GameObject GameObject_Field_Create(void)
 }
 
 // <フィールド上下衝突処理>
-ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj, BOOL is_loop, BOOL is_inner)
+ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge)
 {
 	// ヒットサイド
 	ObjectSide side_hit = NONE;
 
 	// 弾・上下壁当たり判定
 	{
-		float padding_top = GameObject_OffsetY(obj, is_inner ? BOTTOM : TOP, GameObject_GetY(field, TOP));
-		float padding_bottom = GameObject_OffsetY(obj, is_inner ? TOP : BOTTOM, GameObject_GetY(field, BOTTOM));
+		float padding_top = GameObject_GetY(field, TOP);
+		float padding_bottom = GameObject_GetY(field, BOTTOM);
+		switch (edge)
+		{
+		case EDGESIDE_INNER:
+			padding_top = GameObject_OffsetY(obj, BOTTOM, padding_top);
+			padding_bottom = GameObject_OffsetY(obj, TOP, padding_bottom);
+			break;
+		case EDGESIDE_OUTER:
+			padding_top = GameObject_OffsetY(obj, TOP, padding_top);
+			padding_bottom = GameObject_OffsetY(obj, BOTTOM, padding_bottom);
+			break;
+		}
 
 		if (obj->pos.y < padding_top)
 			side_hit = TOP;
 		else if (padding_bottom <= obj->pos.y)
 			side_hit = BOTTOM;
 
-		if (is_loop)
-			// 壁にあたったらループ
-			obj->pos.y = GetLoopRangeF(obj->pos.y, padding_top, padding_bottom);
-		else
+		switch (connection)
+		{
+		case CONNECTION_BARRIER:
 			// 壁にあたったら調整
 			obj->pos.y = ClampF(obj->pos.y, padding_top, padding_bottom);
+			break;
+		case CONNECTION_LOOP:
+			// 壁にあたったらループ
+			obj->pos.y = GetLoopRangeF(obj->pos.y, padding_top, padding_bottom);
+			break;
+		}
 	}
 
 	return side_hit;
 }
 
 // <フィールド左右衝突処理>
-ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* obj, BOOL is_loop, BOOL is_inner)
+ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge)
 {
 	// ヒットサイド
 	ObjectSide side_hit = NONE;
 
 	// 弾・左右壁当たり判定
 	{
-		float padding_left = GameObject_OffsetX(obj, is_inner ? RIGHT : LEFT, GameObject_GetX(field, LEFT));
-		float padding_right = GameObject_OffsetX(obj, is_inner ? LEFT : RIGHT, GameObject_GetX(field, RIGHT));
+		float padding_left = GameObject_GetX(field, LEFT);
+		float padding_right = GameObject_GetX(field, RIGHT);
+		switch (edge)
+		{
+		case EDGESIDE_INNER:
+			padding_left = GameObject_OffsetX(obj, RIGHT, padding_left);
+			padding_right = GameObject_OffsetX(obj, LEFT, padding_right);
+			break;
+		case EDGESIDE_OUTER:
+			padding_left = GameObject_OffsetX(obj, LEFT, padding_left);
+			padding_right = GameObject_OffsetX(obj, RIGHT, padding_right);
+			break;
+		}
 
 		if (obj->pos.x < padding_left)
 			side_hit = LEFT;
 		else if (padding_right <= obj->pos.x)
 			side_hit = RIGHT;
 
-		if (is_loop)
-			// 壁にあたったらループ
-			obj->pos.x = GetLoopRangeF(obj->pos.x, padding_left, padding_right);
-		else
+		switch (connection)
+		{
+		case CONNECTION_BARRIER:
 			// 壁にあたったら調整
 			obj->pos.x = ClampF(obj->pos.x, padding_left, padding_right);
+			break;
+		case CONNECTION_LOOP:
+			// 壁にあたったらループ
+			obj->pos.x = GetLoopRangeF(obj->pos.x, padding_left, padding_right);
+			break;
+		}
 	}
 
 	return side_hit;

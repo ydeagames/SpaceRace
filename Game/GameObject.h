@@ -3,7 +3,7 @@
 
 // 列挙型の定義 ============================================================
 
-// <シーン状態> --------------------------------------------------------
+// <位置関係> ----------------------------------------------------------
 enum ObjectSide
 {
 	NONE = 0,
@@ -13,6 +13,22 @@ enum ObjectSide
 	CENTER_Y = -1,	// Y中央
 	TOP = -3,		// 上
 	BOTTOM = 3		// 下
+};
+
+// <縁の位置> ----------------------------------------------------------
+enum ObjectEdgeSide
+{
+	EDGESIDE_CENTER = 0,		// 縁の上
+	EDGESIDE_OUTER = -1,		// 縁の外側
+	EDGESIDE_INNER = 1		// 縁の内側
+};
+
+// <ワールドのつながり> ------------------------------------------------
+enum ObjectConnection
+{
+	CONNECTION_NONE = 0,		// 繋がりなし、見えない空間に移動
+	CONNECTION_BARRIER,		// 壁があり、進めない
+	CONNECTION_LOOP			// 反対側から出てくる
 };
 
 // 構造体の宣言 ============================================================
@@ -90,10 +106,10 @@ BOOL GameObject_Ship_CollisionBullet(GameObject* ship, GameObject* bullet);
 GameObject GameObject_Field_Create(void);
 
 // <フィールド上下衝突処理>
-ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj, BOOL is_loop = TRUE, BOOL is_inner = FALSE);
+ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge);
 
 // <フィールド左右衝突処理>
-ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* obj, BOOL is_loop = TRUE, BOOL is_inner = FALSE);
+ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge);
 
 // <フィールド描画>
 void GameObject_Field_Render(GameObject* field);
