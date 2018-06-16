@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "GameController.h"
 #include "GameScore.h"
 
 // 構造体の宣言 ============================================================
@@ -12,6 +13,9 @@ typedef struct
 
 	// <シップ>
 	GameObject ship;
+
+	// <コントローラー>
+	GameController controller;
 
 	// <リスポーンカウンター>
 	int counter;

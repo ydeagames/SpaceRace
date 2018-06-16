@@ -11,7 +11,6 @@
 // ヘッダファイルの読み込み ================================================
 #include "GameMain.h"
 #include "GameObject.h"
-#include "GameControllers.h"
 #include "GameScore.h"
 #include "GameResource.h"
 #include "GameScene.h"
@@ -22,9 +21,6 @@
 
 // <シーン> ------------------------------------------------------------
 GameScene g_scene;
-
-// <コントローラー> ----------------------------------------------------
-GameControllers g_controllers;
 
 // <リソース> ----------------------------------------------------------
 GameResource g_resources;
@@ -76,11 +72,11 @@ void InitializeGame(void)
 
 	// シップ1
 	g_scene.ship1 = GameObjectShip_Create(LEFT, &g_scene.field, 80);
-	g_controllers.ship1 = GameController_Player_Create(&g_scene.ship1.ship, &g_scene, PAD_INPUT_8, PAD_INPUT_5);
+	g_scene.ship1.controller = GameController_Player_Create(&g_scene.ship1.ship, PAD_INPUT_8, PAD_INPUT_5);
 
 	// シップ2
 	g_scene.ship2 = GameObjectShip_Create(RIGHT, &g_scene.field, 80);
-	g_controllers.ship2 = GameController_Player_Create(&g_scene.ship2.ship, &g_scene, PAD_INPUT_UP, PAD_INPUT_DOWN);
+	g_scene.ship2.controller = GameController_Player_Create(&g_scene.ship2.ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
 
 	// リソース
 	g_resources = GameResource_Create();
@@ -145,8 +141,8 @@ void UpdateGameSceneDemo(void)
 	}
 
 	// コントローラー更新
-	GameController_Update(&g_controllers.ship1);
-	GameController_Update(&g_controllers.ship2);
+	GameController_Update(&g_scene.ship1.controller);
+	GameController_Update(&g_scene.ship2.controller);
 
 	// 座標更新
 	{
@@ -167,8 +163,8 @@ void UpdateGameSceneDemo(void)
 void UpdateGameScenePlay(void)
 {
 	// コントローラー更新
-	GameController_Update(&g_controllers.ship1);
-	GameController_Update(&g_controllers.ship2);
+	GameController_Update(&g_scene.ship1.controller);
+	GameController_Update(&g_scene.ship2.controller);
 
 	// シップ更新
 	GameObjectShip_Update(&g_scene.ship1);
@@ -176,9 +172,9 @@ void UpdateGameScenePlay(void)
 
 	// 操作
 	if (GameObjectShip_IsAvailable(&g_scene.ship1))
-		GameController_UpdateControl(&g_controllers.ship1);
+		GameController_UpdateControl(&g_scene.ship1.controller);
 	if (GameObjectShip_IsAvailable(&g_scene.ship2))
-		GameController_UpdateControl(&g_controllers.ship2);
+		GameController_UpdateControl(&g_scene.ship2.controller);
 
 	// 座標更新
 	{

@@ -15,7 +15,7 @@ void GameSoundShip_StopInternal(HSND sound, BOOL* playing);
 // <サウンド作成>
 GameSoundShip GameSoundShip_Create(GameObject* field, GameObject* ship, HSND sound, int interval)
 {
-	return { field, ship, FALSE,sound, interval };
+	return { field, ship, FALSE, sound, interval };
 }
 
 // <サウンド更新>

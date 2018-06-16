@@ -12,11 +12,10 @@
 // <シップオブジェクト作成>
 GameObjectShip GameObjectShip_Create(ObjectSide team, GameObject* field, float offset)
 {
-	GameObjectShip ship = { field, GameObject_Ship_Create(), 0, team };
-
+	GameObject shipobj = GameObject_Ship_Create();
+	GameObjectShip ship = { field, shipobj, GameController_Default_Create(&shipobj), 0, team };
 	ship.ship.pos.x = GameObject_OffsetX(&ship.ship, ship.team, GameObject_GetX(ship.field, CENTER_X), 80);
 	GameObjectShip_Reset(&ship);
-
 	return ship;
 }
 
