@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "GameScene.h"
 #include "GameResource.h"
 
 // 構造体の宣言 ============================================================
@@ -8,10 +8,10 @@
 typedef struct
 {
 	// <フィールド>
-	GameObject* field;
+	GameScene* scene;
 
-	// <シップ>
-	GameObject* ship;
+	// <チーム>
+	ObjectSide team;
 
 	// <プレイ中フラグ>
 	BOOL playing;
@@ -37,7 +37,7 @@ typedef struct
 // <<サウンド>> --------------------------------------------------
 
 // <サウンド作成>
-GameSoundShip GameSoundShip_Create(GameObject* field, GameObject* ship, HSND sound, int interval);
+GameSoundShip GameSoundShip_Create(GameScene* scene, ObjectSide team, HSND sound, int interval);
 
 // <サウンド更新>
 void GameSoundShip_Update(GameSoundShip* sound);

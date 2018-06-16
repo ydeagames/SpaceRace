@@ -20,6 +20,14 @@ int GetAbs(int a);
 
 float GetAbsF(float a);
 
+int GetMin(int a, int b);
+
+float GetMinF(float a, float b);
+
+int GetMax(int a, int b);
+
+float GetMaxF(float a, float b);
+
 float GetPercentage(float x, float max);
 
 float GetPercentageRange(float x, float min, float max);

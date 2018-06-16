@@ -13,20 +13,43 @@ void GameSoundShip_StopInternal(HSND sound, BOOL* playing);
 // <<サウンド>> --------------------------------------------------
 
 // <サウンド作成>
-GameSoundShip GameSoundShip_Create(GameObject* field, GameObject* ship, HSND sound, int interval)
+GameSoundShip GameSoundShip_Create(GameScene* scene, ObjectSide team, HSND sound, int interval)
 {
-	return { field, ship, FALSE, sound, interval };
+	return { scene, team, FALSE, sound, interval };
 }
 
 // <サウンド更新>
 void GameSoundShip_Update(GameSoundShip* sound)
 {
-	float progress = 1 - GetPercentageRange(sound->ship->pos.y, GameObject_GetY(sound->field, TOP, -10), GameObject_GetY(sound->field, BOTTOM, -30));
-	int pitch = (int)(SOUND_PITCH_MIN * (1 - progress) + SOUND_PITCH_MAX * progress);
+	float padding_bottom = GameObject_GetY(&sound->scene->field, BOTTOM, -30);
+	float padding_top = GameObject_GetY(&sound->scene->field, TOP, -10);
+	BOOL alive = FALSE;
+	float best_y = padding_bottom;
 
-	SetFrequencySoundMem(pitch, sound->sound);
+	{
+		int i;
+		for (i = 0; i < NUM_SHIP; i++)
+		{
+			GameObjectShip* ship = &sound->scene->ship[i];
+			if (ship->team == sound->team && GameObjectShip_IsAvailable(ship))
+			{
+				alive = TRUE;
+				best_y = GetMinF(best_y, ship->ship.pos.y);
+			}
+		}
+	}
 
-	SetVolumeSoundMem(((GetNowCount() / sound->interval) % 2 == 0) ? 10000 : 0, sound->sound);
+	if (alive)
+	{
+		float progress = 1 - GetPercentageRange(best_y, padding_top, padding_bottom);
+		int pitch = (int)(SOUND_PITCH_MIN * (1 - progress) + SOUND_PITCH_MAX * progress);
+
+		SetFrequencySoundMem(pitch, sound->sound);
+
+		SetVolumeSoundMem(((GetNowCount() / sound->interval) % 2 == 0) ? 10000 : 0, sound->sound);
+	}
+	else
+		SetVolumeSoundMem(0, sound->sound);
 }
 
 // <サウンド再生>

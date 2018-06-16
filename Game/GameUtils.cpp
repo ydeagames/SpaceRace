@@ -51,6 +51,26 @@ float GetAbsF(float a)
 	return a > 0 ? a : -a;
 }
 
+int GetMin(int a, int b)
+{
+	return a < b ? a : b;
+}
+
+float GetMinF(float a, float b)
+{
+	return a < b ? a : b;
+}
+
+int GetMax(int a, int b)
+{
+	return a > b ? a : b;
+}
+
+float GetMaxF(float a, float b)
+{
+	return a > b ? a : b;
+}
+
 float GetPercentage(float x, float max)
 {
 	float n = ClampF(x, 0, max);

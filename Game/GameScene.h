@@ -21,6 +21,7 @@ enum GameState
 // <弾数> --------------------------------------------------------------
 
 #define NUM_BULLET 30
+#define NUM_SHIP 2
 
 // 構造体の宣言 ============================================================
 
@@ -36,11 +37,8 @@ typedef struct
 	// <弾>
 	GameObject bullet[NUM_BULLET];
 
-	// <シップ1>
-	GameObjectShip ship1;
-
-	// <シップ2>
-	GameObjectShip ship2;
+	// <シップ>
+	GameObjectShip ship[NUM_SHIP];
 
 	// <得点>
 	GameTimer timer;
