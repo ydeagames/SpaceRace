@@ -10,7 +10,7 @@ void GameController_Player_UpdateControl(GameController* ctrl);
 // <<コントローラー>> --------------------------------------------------
 
 // <コントローラー作成>
-GameController GameController_Create(GameObject* object, void(*updateFunc)(GameController*), void(*updateCtrlFunc)(GameController*), GameScene* scene, GameObject* enemy)
+GameController GameController_Create(GameObject* object, void(*updateFunc)(GameController*), void(*updateCtrlFunc)(GameController*), GameScene* scene)
 {
 	return { object, updateFunc, updateCtrlFunc, scene };
 }
@@ -30,9 +30,9 @@ void GameController_UpdateControl(GameController* ctrl)
 // <<プレイヤーコントローラー>> ----------------------------------------
 
 // <プレイヤーコントローラー作成>
-GameController GameController_Player_Create(GameObject* object, GameScene* scene, GameObject* enemy, int key_up, int key_down)
+GameController GameController_Player_Create(GameObject* object, GameScene* scene, int key_up, int key_down)
 {
-	GameController ctrl = GameController_Create(object, GameController_Player_Update, GameController_Player_UpdateControl, scene, enemy);
+	GameController ctrl = GameController_Create(object, GameController_Player_Update, GameController_Player_UpdateControl, scene);
 	ctrl.player_key_up = key_up;
 	ctrl.player_key_down = key_down;
 	return ctrl;

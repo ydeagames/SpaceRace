@@ -18,12 +18,6 @@
 #include "GameSoundShip.h"
 
 
-// 定数の定義 ==============================================================
-
-// <サーブ待機> --------------------------------------------------------
-#define SHIP_WAIT_TIME 60
-
-
 // グローバル変数の宣言 ====================================================
 
 // <シーン> ------------------------------------------------------------
@@ -81,33 +75,25 @@ void InitializeGame(void)
 	}
 
 	// シップ1
-	g_scene.ship1 = GameObject_Ship_Create();
-	g_scene.ship1.pos.x = GameObject_OffsetX(&g_scene.ship1, LEFT, GameObject_GetX(&g_scene.field, CENTER_X), 80);
-	GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
-	g_controllers.paddle1 = GameController_Player_Create(&g_scene.ship1, &g_scene, &g_scene.ship2, PAD_INPUT_8, PAD_INPUT_5);
+	g_scene.ship1 = GameObjectShip_Create(LEFT, &g_scene.field, 80);
+	g_controllers.ship1 = GameController_Player_Create(&g_scene.ship1.ship, &g_scene, PAD_INPUT_8, PAD_INPUT_5);
 
 	// シップ2
-	g_scene.ship2 = GameObject_Ship_Create();
-	g_scene.ship2.pos.x = GameObject_OffsetX(&g_scene.ship2, RIGHT, GameObject_GetX(&g_scene.field, CENTER_X), 80);
-	GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
-	g_controllers.paddle2 = GameController_Player_Create(&g_scene.ship2, &g_scene, &g_scene.ship1, PAD_INPUT_UP, PAD_INPUT_DOWN);
+	g_scene.ship2 = GameObjectShip_Create(RIGHT, &g_scene.field, 80);
+	g_controllers.ship2 = GameController_Player_Create(&g_scene.ship2.ship, &g_scene, PAD_INPUT_UP, PAD_INPUT_DOWN);
 
 	// リソース
 	g_resources = GameResource_Create();
 
 	// シップサウンド
-	g_ship1_sound = GameSoundShip_Create(&g_scene.field, &g_scene.ship1, g_resources.sound_se02, SOUND_SHIP1_INTERVAL);
-	g_ship2_sound = GameSoundShip_Create(&g_scene.field, &g_scene.ship2, g_resources.sound_se03, SOUND_SHIP2_INTERVAL);
+	g_ship1_sound = GameSoundShip_Create(&g_scene.field, &g_scene.ship1.ship, g_resources.sound_se02, SOUND_SHIP1_INTERVAL);
+	g_ship2_sound = GameSoundShip_Create(&g_scene.field, &g_scene.ship2.ship, g_resources.sound_se03, SOUND_SHIP2_INTERVAL);
 
 	// タイマー
 	g_scene.timer = GameTimer_Create();
 
 	// 得点
 	g_scene.score = GameScore_Create();
-
-	// サーブ待機
-	g_scene.ship1_counter = 0;
-	g_scene.ship2_counter = 0;
 }
 
 
@@ -146,8 +132,8 @@ void UpdateGameSceneDemo(void)
 			GameScore_Clear(&g_scene.score);
 
 			// シップを初期位置へ
-			GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
-			GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
+			GameObjectShip_Reset(&g_scene.ship1);
+			GameObjectShip_Reset(&g_scene.ship2);
 
 			// サウンド再生
 			GameSoundShip_Start(&g_ship1_sound);
@@ -159,8 +145,8 @@ void UpdateGameSceneDemo(void)
 	}
 
 	// コントローラー更新
-	GameController_Update(&g_controllers.paddle1);
-	GameController_Update(&g_controllers.paddle2);
+	GameController_Update(&g_controllers.ship1);
+	GameController_Update(&g_controllers.ship2);
 
 	// 座標更新
 	{
@@ -181,14 +167,18 @@ void UpdateGameSceneDemo(void)
 void UpdateGameScenePlay(void)
 {
 	// コントローラー更新
-	GameController_Update(&g_controllers.paddle1);
-	GameController_Update(&g_controllers.paddle2);
+	GameController_Update(&g_controllers.ship1);
+	GameController_Update(&g_controllers.ship2);
+
+	// シップ更新
+	GameObjectShip_Update(&g_scene.ship1);
+	GameObjectShip_Update(&g_scene.ship2);
 
 	// 操作
-	if (g_scene.ship1_counter<=0)
-		GameController_UpdateControl(&g_controllers.paddle1);
-	if (g_scene.ship2_counter<=0)
-		GameController_UpdateControl(&g_controllers.paddle2);
+	if (GameObjectShip_IsAvailable(&g_scene.ship1))
+		GameController_UpdateControl(&g_controllers.ship1);
+	if (GameObjectShip_IsAvailable(&g_scene.ship2))
+		GameController_UpdateControl(&g_controllers.ship2);
 
 	// 座標更新
 	{
@@ -196,8 +186,8 @@ void UpdateGameScenePlay(void)
 		for (i = 0; i < NUM_BULLET; i++)
 			GameObject_UpdatePosition(&g_scene.bullet[i]);
 	}
-	GameObject_UpdatePosition(&g_scene.ship1);
-	GameObject_UpdatePosition(&g_scene.ship2);
+	GameObject_UpdatePosition(&g_scene.ship1.ship);
+	GameObject_UpdatePosition(&g_scene.ship2.ship);
 
 	// サウンド更新
 	GameSoundShip_Update(&g_ship1_sound);
@@ -210,52 +200,30 @@ void UpdateGameScenePlay(void)
 		{
 			GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i], CONNECTION_LOOP, EDGESIDE_OUTER);
 
-			if (GameObject_Ship_CollisionBullet(&g_scene.ship1, &g_scene.bullet[i]))
+			if (GameObject_IsHit(&g_scene.ship1.ship, &g_scene.bullet[i]))
 			{
-				GameObject_Ship_SetPosYDefault(&g_scene.ship1, &g_scene.field);
-				g_scene.ship1_counter = SHIP_WAIT_TIME;
+				GameObject_Ship_SetPosYDefault(&g_scene.ship1.ship, &g_scene.field);
+				GameObjectShip_Kill(&g_scene.ship1);
 				GameSoundShip_Stop(&g_ship1_sound);
 				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
 			}
 
-			if (GameObject_Ship_CollisionBullet(&g_scene.ship2, &g_scene.bullet[i]))
+			if (GameObject_IsHit(&g_scene.ship2.ship, &g_scene.bullet[i]))
 			{
-				GameObject_Ship_SetPosYDefault(&g_scene.ship2, &g_scene.field);
-				g_scene.ship2_counter = SHIP_WAIT_TIME;
+				GameObject_Ship_SetPosYDefault(&g_scene.ship2.ship, &g_scene.field);
+				GameObjectShip_Kill(&g_scene.ship2);
 				GameSoundShip_Stop(&g_ship2_sound);
 				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
 			}
 		}
 	}
-	{
-		{
-			if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_NONE, EDGESIDE_OUTER) == TOP)
-			{
-				GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_LOOP, EDGESIDE_CENTER);
-				GameScore_Add(&g_scene.score, LEFT);
-			}
-			else if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_NONE, EDGESIDE_INNER) == BOTTOM)
-				GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_BARRIER, EDGESIDE_INNER);
-		}
-		{
-			if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_NONE, EDGESIDE_OUTER) == TOP)
-			{
-				GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_LOOP, EDGESIDE_CENTER);
-				GameScore_Add(&g_scene.score, RIGHT);
-			}
-			else if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_NONE, EDGESIDE_INNER) == BOTTOM)
-				GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_BARRIER, EDGESIDE_INNER);
-		}
-	}
+	GameObjectShip_CollisionScore(&g_scene.ship1, &g_scene.score);
+	GameObjectShip_CollisionScore(&g_scene.ship2, &g_scene.score);
 
 	// サーブ待機
-	if (g_scene.ship1_counter>0)
-		g_scene.ship1_counter--;
-	else if (g_scene.ship1_counter==0)
+	if (GameObjectShip_IsAvailable(&g_scene.ship1))
 		GameSoundShip_Start(&g_ship1_sound);
-	if (g_scene.ship2_counter>0)
-		g_scene.ship2_counter--;
-	else if (g_scene.ship2_counter==0)
+	if (GameObjectShip_IsAvailable(&g_scene.ship2))
 		GameSoundShip_Start(&g_ship2_sound);
 }
 
@@ -306,30 +274,8 @@ void RenderGameScenePlay(void)
 	// スコア描画
 	GameScore_Render(&g_scene.score, &g_scene.field, &g_resources);
 	// シップ描画
-	if (g_scene.ship1_counter <= 0)
-	{
-		if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship1, CONNECTION_NONE, EDGESIDE_INNER) == TOP)
-		{
-			GameObject lower = g_scene.ship1;
-			lower.pos.y -= lower.size.y;
-			GameObject_Field_CollisionVertical(&g_scene.field, &lower, CONNECTION_LOOP, EDGESIDE_CENTER);
-			lower.pos.y += lower.size.y;
-			GameObject_Render(&lower, COLOR_WHITE);
-		}
-		GameObject_Render(&g_scene.ship1, COLOR_WHITE);
-	}
-	if (g_scene.ship2_counter <= 0)
-	{
-		if (GameObject_Field_CollisionVertical(&g_scene.field, &g_scene.ship2, CONNECTION_NONE, EDGESIDE_INNER) == TOP)
-		{
-			GameObject lower = g_scene.ship2;
-			lower.pos.y -= lower.size.y;
-			GameObject_Field_CollisionVertical(&g_scene.field, &lower, CONNECTION_LOOP, EDGESIDE_CENTER);
-			lower.pos.y += lower.size.y;
-			GameObject_Render(&lower, COLOR_WHITE);
-		}
-		GameObject_Render(&g_scene.ship2, COLOR_WHITE);
-	}
+	GameObjectShip_Render(&g_scene.ship1, &g_scene.field);
+	GameObjectShip_Render(&g_scene.ship2, &g_scene.field);
 	// 弾描画
 	{
 		int i;

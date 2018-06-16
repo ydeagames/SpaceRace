@@ -130,21 +130,9 @@ void GameObject_Ship_SetPosYDefault(GameObject* obj, GameObject* field)
 	obj->pos.y = GameObject_OffsetY(obj, TOP, GameObject_GetY(field, BOTTOM), 16);
 }
 
-// <シップオブジェクト弾衝突処理>
-BOOL GameObject_Ship_CollisionBullet(GameObject* ship, GameObject* bullet)
-{
-	if (GameObject_IsHit(bullet, ship))
-	{
-
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
 // <<フィールドオブジェクト>> ------------------------------------------
 
-// <弾オブジェクト作成>
+// <フィールドオブジェクト作成>
 GameObject GameObject_Field_Create(void)
 {
 	return GameObject_Create(Vec2_Create(SCREEN_CENTER_X, SCREEN_CENTER_Y), Vec2_Create(), Vec2_Create(SCREEN_WIDTH, SCREEN_HEIGHT));

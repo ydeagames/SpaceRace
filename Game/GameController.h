@@ -23,7 +23,7 @@ struct tag_GameController
 // <<コントローラー>> --------------------------------------------------
 
 // <コントローラー作成>
-GameController GameController_Create(GameObject* object, void(*updateFunc)(GameController*), void(*updateCtrlFunc)(GameController*), GameScene* scene, GameObject* enemy);
+GameController GameController_Create(GameObject* object, void(*updateFunc)(GameController*), void(*updateCtrlFunc)(GameController*), GameScene* scene);
 
 // <コントローラー更新>
 void GameController_Update(GameController* ctrl);
@@ -34,4 +34,4 @@ void GameController_UpdateControl(GameController* ctrl);
 // <<プレイヤーコントローラー>> ----------------------------------------
 
 // <プレイヤーコントローラー作成>
-GameController GameController_Player_Create(GameObject* object, GameScene* scene, GameObject* enemy, int key_up, int key_down);
+GameController GameController_Player_Create(GameObject* object, GameScene* scene, int key_up, int key_down);

@@ -7,7 +7,7 @@
 // <ゲームサウンド>
 typedef struct
 {
-	// <シーン>
+	// <フィールド>
 	GameObject* field;
 
 	// <シップ>

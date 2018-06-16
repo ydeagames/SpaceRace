@@ -6,6 +6,6 @@
 // <ƒƒjƒ…[>
 typedef struct
 {
-	GameController paddle2;
-	GameController paddle1;
+	GameController ship2;
+	GameController ship1;
 } GameControllers;

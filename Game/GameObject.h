@@ -43,8 +43,8 @@ typedef struct
 
 // 定数の定義 ==============================================================
 
-// <パドル>
-#define SHIP_VEL 4		// パドルの速度
+// <シップ>
+#define SHIP_VEL 4		// シップの速度
 #define BULLET_VEL 2	// 弾の速度
 
 // 関数の宣言 ==============================================================
@@ -75,34 +75,31 @@ BOOL GameObject_IsHit(GameObject* obj1, GameObject* obj2);
 // <オブジェクト描画>
 void GameObject_Render(GameObject* obj, unsigned int color);
 
-// <<ボールオブジェクト>> ----------------------------------------------
+// <<弾オブジェクト>> ----------------------------------------------
 
-// <ボールオブジェクト作成>
+// <弾オブジェクト作成>
 GameObject GameObject_Bullet_Create(void);
 
-// <ボールオブジェクト座標Xデフォルト>
+// <弾オブジェクト座標Xデフォルト>
 void GameObject_Bullet_SetPosXDefault(GameObject* obj, GameObject* field);
 
-// <ボールオブジェクト座標Yデフォルト>
+// <弾オブジェクト座標Yデフォルト>
 void GameObject_Bullet_SetPosYDefault(GameObject* obj, GameObject* field);
 
-// <ボールオブジェクト移動Xデフォルト>
+// <弾オブジェクト移動Xデフォルト>
 void GameObject_Bullet_SetVelXDefault(GameObject* obj);
 
-// <<パドルオブジェクト>> ----------------------------------------------
+// <<シップオブジェクト>> ----------------------------------------------
 
-// <パドルオブジェクト作成>
+// <シップオブジェクト作成>
 GameObject GameObject_Ship_Create(void);
 
-// <パドルオブジェクト座標Yデフォルト>
+// <シップオブジェクト座標Yデフォルト>
 void GameObject_Ship_SetPosYDefault(GameObject* obj, GameObject* field);
-
-// <パドルオブジェクトボール衝突処理>
-BOOL GameObject_Ship_CollisionBullet(GameObject* ship, GameObject* bullet);
 
 // <<フィールドオブジェクト>> ------------------------------------------
 
-// <ボールオブジェクト作成>
+// <フィールドオブジェクト作成>
 GameObject GameObject_Field_Create(void);
 
 // <フィールド上下衝突処理>

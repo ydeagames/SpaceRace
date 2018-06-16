@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "GameTimer.h"
 #include "GameScore.h"
+#include "GameObjectShip.h"
 
 // 列挙型の定義 ============================================================
 
@@ -36,19 +37,15 @@ typedef struct
 	GameObject bullet[NUM_BULLET];
 
 	// <シップ1>
-	GameObject ship1;
+	GameObjectShip ship1;
 
 	// <シップ2>
-	GameObject ship2;
+	GameObjectShip ship2;
 
 	// <得点>
 	GameTimer timer;
 
 	// <得点>
 	GameScore score;
-
-	// <シップ待機>
-	int ship1_counter;
-	int ship2_counter;
 } GameScene;
 
