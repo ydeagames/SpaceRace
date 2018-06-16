@@ -11,9 +11,12 @@ typedef struct
 	HFNT font_note;
 
 	// <サウンド>
-	HSND sound_se01;
-	HSND sound_se02;
-	HSND sound_se03;
+	HSND sound_dead;
+	HSND sound_ship1;
+	HSND sound_ship2;
+
+	// <テクスチャ>
+	HGRP texture_ship;
 } GameResource;
 
 // 定数の定義 ==============================================================

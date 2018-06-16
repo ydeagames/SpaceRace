@@ -97,8 +97,8 @@ void InitializeGame(void)
 	g_resources = GameResource_Create();
 
 	// シップサウンド
-	g_ship1_sound = GameSoundShip_Create(&g_scene, LEFT, g_resources.sound_se02, SOUND_SHIP1_INTERVAL);
-	g_ship2_sound = GameSoundShip_Create(&g_scene, RIGHT, g_resources.sound_se03, SOUND_SHIP2_INTERVAL);
+	g_ship1_sound = GameSoundShip_Create(&g_scene, LEFT, g_resources.sound_ship1, SOUND_SHIP1_INTERVAL);
+	g_ship2_sound = GameSoundShip_Create(&g_scene, RIGHT, g_resources.sound_ship2, SOUND_SHIP2_INTERVAL);
 
 	// タイマー
 	g_scene.timer = GameTimer_Create();
@@ -235,7 +235,7 @@ void UpdateGameScenePlay(void)
 					if (GameObject_IsHit(&g_scene.ship[j].ship, &g_scene.bullet[i]))
 					{
 						GameObjectShip_Kill(&g_scene.ship[j]);
-						PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
+						PlaySoundMem(g_resources.sound_dead, DX_PLAYTYPE_BACK);
 					}
 			}
 		}

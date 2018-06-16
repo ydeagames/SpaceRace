@@ -10,9 +10,13 @@
 #define FONT_NAME_NOTE "HGS創英ﾌﾟﾚｾﾞﾝｽEB"
 
 // <サウンド> ----------------------------------------------------------
-#define SOUND_SE01 "Resources\\Audio\\se_dead.ogg"
-#define SOUND_SE02 "Resources\\Audio\\se_player.ogg"
-#define SOUND_SE03 "Resources\\Audio\\se_player.ogg"
+#define SOUND_DEAD "Resources\\Audio\\se_dead.ogg"
+#define SOUND_SHIP1 "Resources\\Audio\\se_ship.ogg"
+#define SOUND_SHIP2 "Resources\\Audio\\se_ship.ogg"
+
+// <テクスチャ> --------------------------------------------------------
+#define TEXTURE_SHIP_PROTECTED "Resources\\Textures\\Protected\\Spaceship.png"
+#define TEXTURE_SHIP "Resources\\Textures\\Spaceship.png"
 
 // 関数の定義 ==============================================================
 
@@ -32,9 +36,14 @@ GameResource GameResource_Create(void)
 	res.font_note = CreateFontToHandle(FONT_NAME_NOTE, FONT_SIZE_NOTE, 3, DX_FONTTYPE_ANTIALIASING_4X4);
 
 	// サウンド
-	res.sound_se01 = LoadSoundMem(SOUND_SE01);
-	res.sound_se02 = LoadSoundMem(SOUND_SE02);
-	res.sound_se03 = LoadSoundMem(SOUND_SE03);
+	res.sound_dead = LoadSoundMem(SOUND_DEAD);
+	res.sound_ship1 = LoadSoundMem(SOUND_SHIP1);
+	res.sound_ship2 = LoadSoundMem(SOUND_SHIP2);
+
+	// テクスチャ
+	res.texture_ship = LoadGraph(TEXTURE_SHIP_PROTECTED);
+	if (res.texture_ship == -1)
+		res.texture_ship = LoadGraph(TEXTURE_SHIP);
 
 	return res;
 }
@@ -49,7 +58,10 @@ void GameResource_Delete(GameResource* res)
 	DeleteFontToHandle(res->font_note);
 
 	// サウンド
-	DeleteSoundMem(res->sound_se01);
-	DeleteSoundMem(res->sound_se02);
-	DeleteSoundMem(res->sound_se03);
+	DeleteSoundMem(res->sound_dead);
+	DeleteSoundMem(res->sound_ship1);
+	DeleteSoundMem(res->sound_ship2);
+
+	// テクスチャ
+	DeleteGraph(res->texture_ship);
 }
