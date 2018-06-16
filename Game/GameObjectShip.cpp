@@ -14,7 +14,7 @@ GameObjectShip GameObjectShip_Create(ObjectSide team, GameObject* field, float o
 {
 	GameObject shipobj = GameObject_Ship_Create();
 	GameObjectShip ship = { field, shipobj, GameController_Default_Create(&shipobj), 0, team };
-	ship.ship.pos.x = GameObject_OffsetX(&ship.ship, ship.team, GameObject_GetX(ship.field, CENTER_X), 80);
+	ship.ship.pos.x = GameObject_OffsetX(&ship.ship, ship.team, GameObject_GetX(ship.field, CENTER_X), offset);
 	GameObjectShip_Reset(&ship);
 	return ship;
 }

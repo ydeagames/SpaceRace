@@ -70,19 +70,28 @@ void InitializeGame(void)
 		}
 	}
 
-	// シップ1
+	// シップ1 [↑:W, ↓:S]
 	{
 		GameObjectShip* ship = &g_scene.ship[0];
 		*ship = GameObjectShip_Create(LEFT, &g_scene.field, 80);
 		ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_8, PAD_INPUT_5);
 	}
 
-	// シップ2
+	// シップ2 [↑:↑, ↓:↓]
 	{
 		GameObjectShip* ship = &g_scene.ship[1];
 		*ship = GameObjectShip_Create(RIGHT, &g_scene.field, 80);
 		ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
 	}
+
+	/*
+	// シップ3 [↑:A, ↓:Z] (追加シップ) ※GameScene.h->NUM_SHIPを変更する必要あり
+	{
+		GameObjectShip* ship = &g_scene.ship[2];
+		*ship = GameObjectShip_Create(LEFT, &g_scene.field, 60);
+		ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_4, PAD_INPUT_1);
+	}
+	/**/
 
 	// リソース
 	g_resources = GameResource_Create();
