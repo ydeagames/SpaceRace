@@ -138,7 +138,6 @@ void UpdateGameSceneDemo(void)
 		if (IsButtonDown(PAD_INPUT_10))
 		{
 			// タイマーを開始
-			GameTimer_SetRemainingDefault(&g_scene.timer);
 			GameTimer_Resume(&g_scene.timer);
 
 			// 点数リセット
@@ -245,6 +244,21 @@ void UpdateGameScenePlay(void)
 		int i;
 		for (i = 0; i < NUM_SHIP; i++)
 			GameObjectShip_CollisionScore(&g_scene.ship[i], &g_scene.score);
+	}
+
+	// 終了判定
+	if (GameTimer_IsFinished(&g_scene.timer))
+	{
+		// タイマー停止初期化
+		GameTimer_Pause(&g_scene.timer);
+		GameTimer_SetRemainingDefault(&g_scene.timer);
+
+		// サウンド停止
+		GameSoundShip_Stop(&g_ship1_sound);
+		GameSoundShip_Stop(&g_ship2_sound);
+
+		// シーンをデモに変更
+		g_scene.game_state = STATE_DEMO;
 	}
 }
 
