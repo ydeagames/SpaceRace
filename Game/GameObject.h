@@ -67,7 +67,7 @@ typedef struct
 #define TEXTURE_MISSING -1		// テクスチャが見つかりません
 #define TEXTURE_NONE -2			// テクスチャなし
 // <シップ>
-#define SHIP_VEL 4				// シップの速度
+#define SHIP_VEL 2.3f			// シップの速度
 // <弾>
 #define BULLET_VEL 2			// 弾の速度
 

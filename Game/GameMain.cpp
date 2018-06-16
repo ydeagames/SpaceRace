@@ -69,34 +69,40 @@ void InitializeGame(void)
 
 		// 弾
 		{
-			int i;
-			for (i = 0; i < NUM_BULLET; i++)
+			// 弾スプライト
+			GameSprite sprite = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(139, 1), Vec2_Create(2, 6)));
+			sprite.angle = ToRadians(-90);
+
 			{
-				g_scene.bullet[i] = GameObject_Bullet_Create();
-				GameObject_Bullet_SetPosXDefault(&g_scene.bullet[i], &g_scene.field);
-				GameObject_Bullet_SetPosYDefault(&g_scene.bullet[i], &g_scene.field);
-				GameObject_Bullet_SetVelXDefault(&g_scene.bullet[i]);
+				int i;
+				for (i = 0; i < NUM_BULLET; i++)
+				{
+					g_scene.bullet[i] = GameObject_Bullet_Create();
+					g_scene.bullet[i].sprite = sprite;
+					GameObject_Bullet_SetPosXDefault(&g_scene.bullet[i], &g_scene.field);
+					GameObject_Bullet_SetPosYDefault(&g_scene.bullet[i], &g_scene.field);
+					GameObject_Bullet_SetVelXDefault(&g_scene.bullet[i]);
+				}
 			}
 		}
 
 		// シップ
 		{
 			// シップスプライト
-			GameSprite sprite_ship = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(19, 13), Vec2_Create(26, 38)));
+			GameSprite sprite = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(19, 13), Vec2_Create(26, 38)));
 
 			// シップ1 [↑:W, ↓:S]
 			{
-				GameObjectShip* ship = &g_scene.ship[0];
-				*ship = GameObjectShip_Create(LEFT, &g_scene.field, 80);
-				ship->ship.sprite = sprite_ship;
-				ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_8, PAD_INPUT_5);
+				g_scene.ship[0] = GameObjectShip_Create(LEFT, &g_scene.field, 80);
+				g_scene.ship[0].ship.sprite = sprite;
+				g_scene.ship[0].controller = GameController_Player_Create(&g_scene.ship[0].ship, PAD_INPUT_8, PAD_INPUT_5);
 			}
 
 			// シップ2 [↑:↑, ↓:↓]
 			{
 				GameObjectShip* ship = &g_scene.ship[1];
 				*ship = GameObjectShip_Create(RIGHT, &g_scene.field, 80);
-				ship->ship.sprite = sprite_ship;
+				ship->ship.sprite = sprite;
 				ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
 			}
 

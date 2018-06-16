@@ -8,12 +8,12 @@
 #define DEBUG_HITBOX TRUE
 
 // <弾>
-#define BULLET_WIDTH 8
-#define BULLET_HEIGHT 8
+#define BULLET_WIDTH 6
+#define BULLET_HEIGHT 2
 
 // <シップ>
-#define ship_WIDTH  8
-#define ship_HEIGHT 28
+#define SHIP_WIDTH  (26-2)
+#define SHIP_HEIGHT (38-4)
 
 // 関数の定義 ==============================================================
 
@@ -183,7 +183,7 @@ void GameObject_Bullet_SetVelXDefault(GameObject* obj)
 // <シップオブジェクト作成>
 GameObject GameObject_Ship_Create(void)
 {
-	return GameObject_Create(Vec2_Create(), Vec2_Create(), Vec2_Create(ship_WIDTH, ship_HEIGHT));
+	return GameObject_Create(Vec2_Create(), Vec2_Create(), Vec2_Create(SHIP_WIDTH, SHIP_HEIGHT));
 }
 
 // <シップオブジェクト座標Yデフォルト>
