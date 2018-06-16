@@ -30,6 +30,7 @@ void GameObjectShip_Reset(GameObjectShip* ship)
 // <シップオブジェクト死亡>
 void GameObjectShip_Kill(GameObjectShip* ship)
 {
+	GameObjectShip_Reset(ship);
 	ship->counter = SHIP_WAIT_TIME;
 }
 
@@ -52,7 +53,7 @@ BOOL GameObjectShip_CollisionScore(GameObjectShip* ship, GameScore* score)
 	if (GameObject_Field_CollisionVertical(ship->field, &ship->ship, CONNECTION_NONE, EDGESIDE_OUTER) == TOP)
 	{
 		GameObject_Field_CollisionVertical(ship->field, &ship->ship, CONNECTION_LOOP, EDGESIDE_CENTER);
-		GameScore_Add(score, LEFT);
+		GameScore_Add(score, ship->team);
 
 		return TRUE;
 	}

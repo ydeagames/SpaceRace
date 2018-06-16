@@ -202,7 +202,6 @@ void UpdateGameScenePlay(void)
 
 			if (GameObject_IsHit(&g_scene.ship1.ship, &g_scene.bullet[i]))
 			{
-				GameObject_Ship_SetPosYDefault(&g_scene.ship1.ship, &g_scene.field);
 				GameObjectShip_Kill(&g_scene.ship1);
 				GameSoundShip_Stop(&g_ship1_sound);
 				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
@@ -210,7 +209,6 @@ void UpdateGameScenePlay(void)
 
 			if (GameObject_IsHit(&g_scene.ship2.ship, &g_scene.bullet[i]))
 			{
-				GameObject_Ship_SetPosYDefault(&g_scene.ship2.ship, &g_scene.field);
 				GameObjectShip_Kill(&g_scene.ship2);
 				GameSoundShip_Stop(&g_ship2_sound);
 				PlaySoundMem(g_resources.sound_se01, DX_PLAYTYPE_BACK);
