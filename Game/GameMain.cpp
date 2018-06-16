@@ -3,7 +3,7 @@
 //!
 //! @brief  SpaceRace ノーマル課題
 //!
-//! @date   2018/06/13
+//! @date   2018/06/17
 //!
 //! @author GF1 26 山口寛雅
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
@@ -141,6 +141,7 @@ void InitializeGame(void)
 //----------------------------------------------------------------------
 void UpdateGame(void)
 {
+	// ゲームシーン
 	switch (g_scene.game_state)
 	{
 	case STATE_DEMO:
@@ -225,7 +226,7 @@ void UpdateGameScenePlay(void)
 	{
 		int i;
 		for (i = 0; i < NUM_SHIP; i++)
-			if (GameObjectShip_IsAvailable(&g_scene.ship[i]))
+			if (GameObjectShip_IsAlive(&g_scene.ship[i]))
 				GameController_UpdateControl(&g_scene.ship[i].controller);
 	}
 
@@ -250,14 +251,18 @@ void UpdateGameScenePlay(void)
 		int i;
 		for (i = 0; i < NUM_BULLET; i++)
 		{
+			// フィールドの左右で弾ループ
 			GameObject_Field_CollisionHorizontal(&g_scene.field, &g_scene.bullet[i], CONNECTION_LOOP, EDGESIDE_OUTER);
 
 			{
 				int j;
 				for (j = 0; j < NUM_SHIP; j++)
+					// シップとあたったら
 					if (GameObject_IsHit(&g_scene.ship[j].ship, &g_scene.bullet[i]))
 					{
+						// シップ死亡
 						GameObjectShip_Kill(&g_scene.ship[j]);
+						// シップ死亡音
 						PlaySoundMem(g_resources.sound_dead, DX_PLAYTYPE_BACK);
 					}
 			}
@@ -266,6 +271,7 @@ void UpdateGameScenePlay(void)
 	{
 		int i;
 		for (i = 0; i < NUM_SHIP; i++)
+			// 上まで行ったらスコア加算
 			GameObjectShip_CollisionScore(&g_scene.ship[i], &g_scene.score);
 	}
 
@@ -294,6 +300,7 @@ void UpdateGameScenePlay(void)
 //----------------------------------------------------------------------
 void RenderGame(void)
 {
+	// ゲームシーン
 	switch (g_scene.game_state)
 	{
 	case STATE_DEMO:

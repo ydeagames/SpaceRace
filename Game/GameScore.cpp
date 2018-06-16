@@ -12,9 +12,10 @@ GameScore GameScore_Create(void)
 }
 
 // <スコア追加>
-void GameScore_Add(GameScore* score, ObjectSide side)
+void GameScore_Add(GameScore* score, ObjectSide team)
 {
-	switch (side)
+	// チームによって加点
+	switch (team)
 	{
 	case RIGHT:
 		score->score2++;
@@ -40,6 +41,7 @@ void GameScore_Render(GameScore* score, GameObject* field, GameResource* resourc
 	// フォントを使用した文字の幅を取得
 	int width_score1 = GetDrawFormatStringWidthToHandle(resources->font_spacerace, "%2d", score->score1);
 
+	// スコア描画
 	DrawFormatStringToHandle((int)(GameObject_GetX(field, CENTER_X) - (100 + width_score1)), (int)GameObject_GetY(field, BOTTOM, -FONT_SIZE_SPACERACE - 10), COLOR_WHITE, resources->font_spacerace, "%2d", score->score1);
 	DrawFormatStringToHandle((int)(GameObject_GetX(field, CENTER_X) + 100), (int)GameObject_GetY(field, BOTTOM, -FONT_SIZE_SPACERACE - 10), COLOR_WHITE, resources->font_spacerace, "%2d", score->score2);
 }

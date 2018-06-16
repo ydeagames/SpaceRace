@@ -7,13 +7,13 @@
 typedef struct tag_GameController GameController;
 struct tag_GameController
 {
-	GameObject* object;
-	void(*Update)(GameController*);
-	void(*UpdateControl)(GameController*);
+	GameObject* object;							// コントロールオブジェクト
+	void(*Update)(GameController*);				// コントローラ更新関数
+	void(*UpdateControl)(GameController*);		// コントローラ操作関数
 
 	// 継承ができないので仕方なくPlayer用の変数
-	int player_key_up;
-	int player_key_down;
+	int player_key_up;							// ↑キー
+	int player_key_down;						// ↓キー
 };
 
 // 関数の宣言 ==============================================================

@@ -27,10 +27,10 @@ typedef struct
 
 // <サウンド> ----------------------------------------------------------
 
-#define SOUND_PITCH_MAX ((int) 44100*2.6f)
-#define SOUND_PITCH_MIN ((int) 44100*1.0f)
-#define SOUND_SHIP1_INTERVAL 67
-#define SOUND_SHIP2_INTERVAL (67*2)
+#define SOUND_PITCH_MAX ((int) 44100*2.6f)		// シップの音ピッチ最大
+#define SOUND_PITCH_MIN ((int) 44100*1.0f)		// シップの音ピッチ最小
+#define SOUND_SHIP1_INTERVAL 67					// シップ1の音リズム
+#define SOUND_SHIP2_INTERVAL (67*2)				// シップ2の音リズム
 
 // 関数の宣言 ==============================================================
 

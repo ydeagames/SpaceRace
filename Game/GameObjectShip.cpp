@@ -40,8 +40,8 @@ void GameObjectShip_Update(GameObjectShip* ship)
 		ship->counter--;
 }
 
-// <シップオブジェクト有効>
-BOOL GameObjectShip_IsAvailable(GameObjectShip* ship)
+// <シップオブジェクト生きている>
+BOOL GameObjectShip_IsAlive(GameObjectShip* ship)
 {
 	return ship->counter <= 0;
 }
@@ -49,14 +49,19 @@ BOOL GameObjectShip_IsAvailable(GameObjectShip* ship)
 // <シップオブジェクト当たり判定>
 BOOL GameObjectShip_CollisionScore(GameObjectShip* ship, GameScore* score)
 {
+	// 外側の上にあたっていたら
 	if (GameObject_Field_CollisionVertical(ship->field, &ship->ship, CONNECTION_NONE, EDGESIDE_OUTER) == TOP)
 	{
+		// 中側のフィールドでループ
 		GameObject_Field_CollisionVertical(ship->field, &ship->ship, CONNECTION_LOOP, EDGESIDE_CENTER);
+		// スコアを加算
 		GameScore_Add(score, ship->team);
 
 		return TRUE;
 	}
+	// 内側の下に当たっていたら
 	else if (GameObject_Field_CollisionVertical(ship->field, &ship->ship, CONNECTION_NONE, EDGESIDE_INNER) == BOTTOM)
+		// 内側のフィールドでブロック
 		GameObject_Field_CollisionVertical(ship->field, &ship->ship, CONNECTION_BARRIER, EDGESIDE_INNER);
 
 	return FALSE;
@@ -65,16 +70,21 @@ BOOL GameObjectShip_CollisionScore(GameObjectShip* ship, GameScore* score)
 // <シップオブジェクト描画>
 void GameObjectShip_Render(GameObjectShip* ship, GameObject* field)
 {
-	if (GameObjectShip_IsAvailable(ship))
+	// 生きていたら
+	if (GameObjectShip_IsAlive(ship))
 	{
+		// 上端の半分にシップがめり込んだとき下から半分出てくるように表示
+		// 内側の上に当たっていたら
 		if (GameObject_Field_CollisionVertical(field, &ship->ship, CONNECTION_NONE, EDGESIDE_INNER) == TOP)
 		{
-			GameObject lower = ship->ship;
-			lower.pos.y -= lower.size.y;
-			GameObject_Field_CollisionVertical(field, &lower, CONNECTION_LOOP, EDGESIDE_CENTER);
-			lower.pos.y += lower.size.y;
-			GameObject_Render(&lower);
+			// 1ループした下側のシップの描画
+			GameObject obj = ship->ship;
+			obj.pos.y -= obj.size.y;
+			GameObject_Field_CollisionVertical(field, &obj, CONNECTION_LOOP, EDGESIDE_CENTER);
+			obj.pos.y += obj.size.y;
+			GameObject_Render(&obj);
 		}
+		// シップ描画
 		GameObject_Render(&ship->ship);
 	}
 }

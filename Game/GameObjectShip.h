@@ -41,7 +41,7 @@ void GameObjectShip_Kill(GameObjectShip* ship);
 void GameObjectShip_Update(GameObjectShip* ship);
 
 // <シップオブジェクト有効>
-BOOL GameObjectShip_IsAvailable(GameObjectShip* ship);
+BOOL GameObjectShip_IsAlive(GameObjectShip* ship);
 
 // <シップオブジェクト当たり判定>
 BOOL GameObjectShip_CollisionScore(GameObjectShip* ship, GameScore* score);

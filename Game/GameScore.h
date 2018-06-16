@@ -7,8 +7,8 @@
 // <ゲームスコア>
 typedef struct
 {
-	int score1;	// 1Pのスコア
-	int score2;	// 2Pのスコア
+	int score1;		// 1Pのスコア
+	int score2;		// 2Pのスコア
 } GameScore;
 
 // 関数の宣言 ==============================================================
@@ -19,7 +19,7 @@ typedef struct
 GameScore GameScore_Create(void);
 
 // <スコア追加>
-void GameScore_Add(GameScore* score, ObjectSide side);
+void GameScore_Add(GameScore* score, ObjectSide team);
 
 // <スコアリセット>
 void GameScore_Clear(GameScore* score);

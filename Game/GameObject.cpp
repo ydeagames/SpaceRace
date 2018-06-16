@@ -5,7 +5,7 @@
 // 定数の定義 ==============================================================
 
 // <デバッグ用当たり判定表示>
-#define DEBUG_HITBOX TRUE
+#define DEBUG_HITBOX FALSE
 
 // <弾>
 #define BULLET_WIDTH 6
@@ -208,6 +208,7 @@ ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj
 
 	// 弾・上下壁当たり判定
 	{
+		// 縁に応じてパディングを調整
 		float padding_top = GameObject_GetY(field, TOP);
 		float padding_bottom = GameObject_GetY(field, BOTTOM);
 		switch (edge)
@@ -222,11 +223,13 @@ ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj
 			break;
 		}
 
+		// 当たり判定
 		if (obj->pos.y < padding_top)
 			side_hit = TOP;
 		else if (padding_bottom <= obj->pos.y)
 			side_hit = BOTTOM;
 
+		// フィールドのつながり
 		switch (connection)
 		{
 		case CONNECTION_BARRIER:
@@ -251,6 +254,7 @@ ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* o
 
 	// 弾・左右壁当たり判定
 	{
+		// 縁に応じてパディングを調整
 		float padding_left = GameObject_GetX(field, LEFT);
 		float padding_right = GameObject_GetX(field, RIGHT);
 		switch (edge)
@@ -265,11 +269,13 @@ ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* o
 			break;
 		}
 
+		// 当たり判定
 		if (obj->pos.x < padding_left)
 			side_hit = LEFT;
 		else if (padding_right <= obj->pos.x)
 			side_hit = RIGHT;
 
+		// フィールドのつながり
 		switch (connection)
 		{
 		case CONNECTION_BARRIER:
