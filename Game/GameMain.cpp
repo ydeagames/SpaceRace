@@ -87,7 +87,7 @@ void InitializeGame(void)
 		// シップ
 		{
 			// シップスプライト
-			GameSprite sprite = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(19, 13), Vec2_Create(26, 38)));
+			GameSprite sprite = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(16, 13), Vec2_Create(32, 38)));
 
 			// シップ1 [↑:W, ↓:S]
 			{
@@ -118,7 +118,7 @@ void InitializeGame(void)
 		{
 			// 旗スプライト
 			GameSprite sprite = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(143, 10), Vec2_Create(16, 26)));
-			sprite.scale = 2;
+			sprite.scale = 1.25f;
 			sprite.texture.center.x = 1;
 			sprite.texture.center.y = sprite.texture.size.y;
 

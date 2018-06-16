@@ -17,7 +17,7 @@
 
 // <テクスチャ> --------------------------------------------------------
 #define TEXTURE_SPACERACE_PROTECTED "Resources\\Textures\\Protected\\SpaceRace.png"
-#define TEXTURE_SPACERACE "Resources\\Textures\\Spaceship.png"
+#define TEXTURE_SPACERACE "Resources\\Textures\\SpaceRace.png"
 
 // 関数の定義 ==============================================================
 
