@@ -100,7 +100,7 @@ void InitializeGame(void)
 				ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
 			}
 
-			//*
+			/*
 			// シップ3 [↑:A, ↓:Z] (追加シップ) ※GameScene.h->NUM_SHIPを変更する必要あり
 			{
 				GameObjectShip* ship = &g_scene.ship[2];
