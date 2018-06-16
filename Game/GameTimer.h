@@ -41,14 +41,12 @@ void GameTimer_Resume(GameTimer* timer);
 // <タイマーセット>
 void GameTimer_Set(GameTimer* timer, float new_time);
 
-// <タイマーセット>
-void GameTimer_SetDefault(GameTimer* timer);
 
-// <タイマーカウントダウン開始>
-void GameTimer_Start(GameTimer* timer, float remaining);
+// <タイマー残り時間セット>
+void GameTimer_SetRemaining(GameTimer* timer, float remaining);
 
-// <ゲーム時間制限でタイマーカウントダウン開始>
-void GameTimer_SetDefault(GameTimer* timer);
+// <ゲーム時間制限でタイマー残り時間セット>
+void GameTimer_SetRemainingDefault(GameTimer* timer);
 
 // <タイマー残り時間>
 float GameTimer_GetTimeRemaining(GameTimer* timer);

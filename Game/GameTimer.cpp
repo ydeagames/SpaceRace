@@ -12,7 +12,9 @@
 // <タイマー作成>
 GameTimer GameTimer_Create(void)
 {
-	return { -1, -1, TRUE };
+	GameTimer timer = { -1, -1, TRUE };
+	GameTimer_Reset(&timer);
+	return timer;
 }
 
 // <タイマー時間>
@@ -46,8 +48,9 @@ void GameTimer_Reset(GameTimer* timer)
 // <タイマー再開>
 void GameTimer_Resume(GameTimer* timer)
 {
+	if (timer->paused)
+		timer->start_time = GetNowCount() - timer->last_time;
 	timer->paused = FALSE;
-	timer->start_time = GetNowCount() - timer->last_time;
 }
 
 // <タイマーセット>
@@ -58,17 +61,16 @@ void GameTimer_Set(GameTimer* timer, float new_time)
 	timer->last_time = new_time_in_ticks;
 }
 
-// <タイマーカウントダウン開始>
-void GameTimer_Start(GameTimer* timer, float remaining)
+// <タイマー残り時間セット>
+void GameTimer_SetRemaining(GameTimer* timer, float remaining)
 {
-	GameTimer_Resume(timer);
 	GameTimer_Set(timer, -remaining);
 }
 
-// <ゲーム時間制限でタイマーカウントダウン開始>
-void GameTimer_SetDefault(GameTimer* timer)
+// <ゲーム時間制限でタイマー残り時間セット>
+void GameTimer_SetRemainingDefault(GameTimer* timer)
 {
-	GameTimer_Start(timer, GAME_DURATION_SECONDS);
+	GameTimer_SetRemaining(timer, GAME_DURATION_SECONDS);
 }
 
 // <タイマー残り時間>

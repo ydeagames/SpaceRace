@@ -84,11 +84,11 @@ void InitializeGame(void)
 		ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
 	}
 
-	/*
+	//*
 	// シップ3 [↑:A, ↓:Z] (追加シップ) ※GameScene.h->NUM_SHIPを変更する必要あり
 	{
 		GameObjectShip* ship = &g_scene.ship[2];
-		*ship = GameObjectShip_Create(LEFT, &g_scene.field, 60);
+		*ship = GameObjectShip_Create(LEFT, &g_scene.field, 120);
 		ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_4, PAD_INPUT_1);
 	}
 	/**/
@@ -102,6 +102,7 @@ void InitializeGame(void)
 
 	// タイマー
 	g_scene.timer = GameTimer_Create();
+	GameTimer_SetRemainingDefault(&g_scene.timer);
 
 	// 得点
 	g_scene.score = GameScore_Create();
@@ -137,7 +138,8 @@ void UpdateGameSceneDemo(void)
 		if (IsButtonDown(PAD_INPUT_10))
 		{
 			// タイマーを開始
-			GameTimer_SetDefault(&g_scene.timer);
+			GameTimer_SetRemainingDefault(&g_scene.timer);
+			GameTimer_Resume(&g_scene.timer);
 
 			// 点数リセット
 			GameScore_Clear(&g_scene.score);
@@ -278,6 +280,8 @@ void RenderGameSceneDemo(void)
 		for (i = 0; i < NUM_BULLET; i++)
 			GameObject_Render(&g_scene.bullet[i], COLOR_WHITE);
 	}
+	// タイム描画
+	GameTimer_Render(&g_scene.timer, &g_scene.field, &g_resources);
 	// スコア描画
 	GameScore_Render(&g_scene.score, &g_scene.field, &g_resources);
 }
