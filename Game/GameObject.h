@@ -47,12 +47,6 @@ float GameObject_OffsetX(GameObject* obj, ObjectSide side, float pos = 0.f, floa
 // <オブジェクトXオフセット>
 float GameObject_OffsetY(GameObject* obj, ObjectSide side, float pos = 0.f, float padding = 0.f);
 
-// <オブジェクトX位置セット>
-void GameObject_SetX(GameObject* obj, ObjectSide side, float pos = 0.f, float padding = 0.f);
-
-// <オブジェクトY位置セット>
-void GameObject_SetY(GameObject* obj, ObjectSide side, float pos = 0.f, float padding = 0.f);
-
 // <オブジェクトX位置ゲット>
 float GameObject_GetX(GameObject* obj, ObjectSide side, float padding = 0.f);
 
@@ -96,10 +90,10 @@ BOOL GameObject_Ship_CollisionBullet(GameObject* ship, GameObject* bullet);
 GameObject GameObject_Field_Create(void);
 
 // <フィールド上下衝突処理>
-ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj);
+ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj, BOOL is_loop = TRUE, BOOL is_inner = FALSE);
 
 // <フィールド左右衝突処理>
-ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* obj);
+ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* obj, BOOL is_loop = TRUE, BOOL is_inner = FALSE);
 
 // <フィールド描画>
 void GameObject_Field_Render(GameObject* field);

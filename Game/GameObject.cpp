@@ -61,18 +61,6 @@ float GameObject_OffsetY(GameObject* obj, ObjectSide side, float pos, float padd
 	return pos + offset;
 }
 
-// <オブジェクトX位置セット>
-void GameObject_SetX(GameObject* obj, ObjectSide side, float pos, float padding)
-{
-	obj->pos.x = GameObject_OffsetX(obj, side, pos, padding);
-}
-
-// <オブジェクトY位置セット>
-void GameObject_SetY(GameObject* obj, ObjectSide side, float pos, float padding)
-{
-	obj->pos.y = GameObject_OffsetY(obj, side, pos, padding);
-}
-
 // <オブジェクトX位置ゲット>
 float GameObject_GetX(GameObject* obj, ObjectSide side, float padding)
 {
@@ -139,7 +127,7 @@ GameObject GameObject_Ship_Create(void)
 // <シップオブジェクト座標Yデフォルト>
 void GameObject_Ship_SetPosYDefault(GameObject* obj, GameObject* field)
 {
-	GameObject_SetY(obj, TOP, GameObject_GetY(field, BOTTOM), 16);
+	obj->pos.y = GameObject_OffsetY(obj, TOP, GameObject_GetY(field, BOTTOM), 16);
 }
 
 // <シップオブジェクト弾衝突処理>
@@ -163,46 +151,54 @@ GameObject GameObject_Field_Create(void)
 }
 
 // <フィールド上下衝突処理>
-ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj)
+ObjectSide GameObject_Field_CollisionVertical(GameObject* field, GameObject* obj, BOOL is_loop, BOOL is_inner)
 {
 	// ヒットサイド
 	ObjectSide side_hit = NONE;
 
 	// 弾・上下壁当たり判定
 	{
-		float padding_top = GameObject_OffsetY(obj, TOP, GameObject_GetY(field, TOP));
-		float padding_bottom = GameObject_OffsetY(obj, BOTTOM, GameObject_GetY(field, BOTTOM));
+		float padding_top = GameObject_OffsetY(obj, is_inner ? BOTTOM : TOP, GameObject_GetY(field, TOP));
+		float padding_bottom = GameObject_OffsetY(obj, is_inner ? TOP : BOTTOM, GameObject_GetY(field, BOTTOM));
 
 		if (obj->pos.y < padding_top)
 			side_hit = TOP;
 		else if (padding_bottom <= obj->pos.y)
 			side_hit = BOTTOM;
 
-		// 壁にあたったらループ
-		obj->pos.y = GetLoopRangeF(obj->pos.y, padding_top, padding_bottom);
+		if (is_loop)
+			// 壁にあたったらループ
+			obj->pos.y = GetLoopRangeF(obj->pos.y, padding_top, padding_bottom);
+		else
+			// 壁にあたったら調整
+			obj->pos.y = ClampF(obj->pos.y, padding_top, padding_bottom);
 	}
 
 	return side_hit;
 }
 
 // <フィールド左右衝突処理>
-ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* obj)
+ObjectSide GameObject_Field_CollisionHorizontal(GameObject* field, GameObject* obj, BOOL is_loop, BOOL is_inner)
 {
 	// ヒットサイド
 	ObjectSide side_hit = NONE;
 
 	// 弾・左右壁当たり判定
 	{
-		float padding_left = GameObject_OffsetX(obj, LEFT, GameObject_GetX(field, LEFT));
-		float padding_right = GameObject_OffsetX(obj, RIGHT, GameObject_GetX(field, RIGHT));
+		float padding_left = GameObject_OffsetX(obj, is_inner ? RIGHT : LEFT, GameObject_GetX(field, LEFT));
+		float padding_right = GameObject_OffsetX(obj, is_inner ? LEFT : RIGHT, GameObject_GetX(field, RIGHT));
 
 		if (obj->pos.x < padding_left)
 			side_hit = LEFT;
 		else if (padding_right <= obj->pos.x)
 			side_hit = RIGHT;
 
-		// 壁にあたったらループ
-		obj->pos.x = GetLoopRangeF(obj->pos.x, padding_left, padding_right);
+		if (is_loop)
+			// 壁にあたったらループ
+			obj->pos.x = GetLoopRangeF(obj->pos.x, padding_left, padding_right);
+		else
+			// 壁にあたったら調整
+			obj->pos.x = ClampF(obj->pos.x, padding_left, padding_right);
 	}
 
 	return side_hit;
