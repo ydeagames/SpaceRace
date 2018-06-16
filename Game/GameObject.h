@@ -33,13 +33,20 @@ enum ObjectConnection
 
 // 構造体の宣言 ============================================================
 
+// <テクスチャ>
+typedef struct
+{
+	HGRP texture;				// <テクスチャ>
+	Vec2 anchor;				// <テクスチャ基点>
+	Vec2 size;					// <テクスチャサイズ>
+	Vec2 center;				// <テクスチャ中心>
+} GameTexture;
+
 // <スプライトオブジェクト>
 typedef struct
 {
 	unsigned int color;			// <色>
-	HGRP texture;				// <テクスチャ>
-	Vec2 texture_anchor;		// <テクスチャ基点>
-	Vec2 texture_size;			// <テクスチャサイズ>
+	GameTexture texture;		// <テクスチャ>
 	Vec2 offset;				// <オフセット>
 	float scale;				// <スケール>
 	float angle;				// <回転>
@@ -57,7 +64,8 @@ typedef struct
 // 定数の定義 ==============================================================
 
 // <テクスチャ>
-#define TEXTURE_NONE -1			// テクスチャなし
+#define TEXTURE_MISSING -1		// テクスチャが見つかりません
+#define TEXTURE_NONE -2			// テクスチャなし
 // <シップ>
 #define SHIP_VEL 4				// シップの速度
 // <弾>
@@ -65,10 +73,18 @@ typedef struct
 
 // 関数の宣言 ==============================================================
 
+// <<テクスチャ>> ------------------------------------------------------
+
+// <テクスチャ作成>
+GameTexture GameTexture_Create(HGRP texture, Vec2 anchor, Vec2 size);
+
+// <テクスチャなし>
+GameTexture GameTexture_CreateNone();
+
 // <<スプライト>> ------------------------------------------------------
 
 // <スプライト作成>
-GameSprite GameSprite_Create(HGRP texture, Vec2 anchor, Vec2 size, Vec2 offset, float scale = 1, float angle = 0);
+GameSprite GameSprite_Create(GameTexture texture, float scale = 1, float angle = 0);
 
 // <スプライトなし>
 GameSprite GameSprite_CreateNone();

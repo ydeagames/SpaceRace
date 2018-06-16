@@ -17,18 +17,32 @@
 
 // 関数の定義 ==============================================================
 
+// <<テクスチャ>> ------------------------------------------------------
+
+// <テクスチャ作成>
+GameTexture GameTexture_Create(HGRP texture, Vec2 anchor, Vec2 size)
+{
+	return { texture, anchor, size, Vec2_Create(size.x / 2, size.y / 2) };
+}
+
+// <テクスチャなし>
+GameTexture GameTexture_CreateNone()
+{
+	return GameTexture_Create(TEXTURE_NONE, Vec2_Create(), Vec2_Create());
+}
+
 // <<スプライト>> ------------------------------------------------------
 
 // <スプライト作成>
-GameSprite GameSprite_Create(HGRP texture, Vec2 anchor, Vec2 size, Vec2 offset, float scale, float angle)
+GameSprite GameSprite_Create(GameTexture texture, float scale, float angle)
 {
-	return { COLOR_WHITE, texture, anchor, size, offset, scale, angle };
+	return { COLOR_WHITE, texture, Vec2_Create(), scale, angle };
 }
 
 // <スプライトなし>
 GameSprite GameSprite_CreateNone()
 {
-	return GameSprite_Create(TEXTURE_NONE, Vec2_Create(), Vec2_Create(), Vec2_Create());
+	return GameSprite_Create(GameTexture_CreateNone(), 0, 0);
 }
 
 // <<オブジェクト>> ----------------------------------------------------
@@ -104,22 +118,37 @@ BOOL GameObject_IsHit(GameObject* obj1, GameObject* obj2)
 // <オブジェクト描画>
 void GameObject_Render(GameObject* obj)
 {
-	if (obj->sprite.texture == TEXTURE_NONE)
+	// テクスチャを確認
+	if (obj->sprite.texture.texture == TEXTURE_NONE)
+		// 矩形描画
 		DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), obj->sprite.color, TRUE);
 	else
 	{
-		if (DEBUG_HITBOX)
-			DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), obj->sprite.color, TRUE);
-		DrawRectRotaGraph2F(
-			GameObject_GetX(obj, CENTER_X), GameObject_GetY(obj, CENTER_Y),
-			(int)obj->sprite.texture_anchor.x, (int)obj->sprite.texture_anchor.y,
-			(int)obj->sprite.texture_size.x, (int)obj->sprite.texture_size.y,
-			obj->sprite.offset.x, obj->sprite.offset.y,
-			(double)obj->sprite.scale,
-			(double)obj->sprite.angle,
-			obj->sprite.texture,
-			TRUE
-		);
+		if (obj->sprite.texture.texture != TEXTURE_MISSING)
+		{
+			// デバッグ当たり判定枠を表示
+			if (DEBUG_HITBOX)
+				DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), obj->sprite.color, FALSE, .5f);
+			// スプライト描画
+			DrawRectRotaGraph2F(
+				GameObject_GetX(obj, CENTER_X) + obj->sprite.offset.x, GameObject_GetY(obj, CENTER_Y) + obj->sprite.offset.y,
+				(int)obj->sprite.texture.anchor.x, (int)obj->sprite.texture.anchor.y,
+				(int)obj->sprite.texture.size.x, (int)obj->sprite.texture.size.y,
+				obj->sprite.texture.center.x, obj->sprite.texture.center.y,
+				(double)obj->sprite.scale,
+				(double)obj->sprite.angle,
+				obj->sprite.texture.texture,
+				TRUE
+			);
+		}
+		else
+		{
+			// NULLテクスチャを表示
+			DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), COLOR_BLACK, TRUE);
+			DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, CENTER_X), GameObject_GetY(obj, CENTER_Y), COLOR_FUCHSIA, TRUE);
+			DrawBoxAA(GameObject_GetX(obj, CENTER_X), GameObject_GetY(obj, CENTER_Y), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), COLOR_FUCHSIA, TRUE);
+			DrawBoxAA(GameObject_GetX(obj, LEFT), GameObject_GetY(obj, TOP), GameObject_GetX(obj, RIGHT), GameObject_GetY(obj, BOTTOM), obj->sprite.color, FALSE, .5f);
+		}
 	}
 }
 

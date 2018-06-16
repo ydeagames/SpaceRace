@@ -19,15 +19,15 @@
 
 // グローバル変数の宣言 ====================================================
 
-// <シーン> ------------------------------------------------------------
-GameScene g_scene;
-
 // <リソース> ----------------------------------------------------------
 GameResource g_resources;
 
 // <サウンド> ----------------------------------------------------------
 GameSoundShip g_ship1_sound;
 GameSoundShip g_ship2_sound;
+
+// <シーン> ------------------------------------------------------------
+GameScene g_scene;
 
 
 // 関数の宣言 ==============================================================
@@ -52,47 +52,6 @@ void RenderGameScenePlay(void);
 //----------------------------------------------------------------------
 void InitializeGame(void)
 {
-	// シーン状態
-	g_scene.game_state = STATE_DEMO;
-
-	// フィールド
-	g_scene.field = GameObject_Field_Create();
-
-	// 弾
-	{
-		int i;
-		for (i = 0; i < NUM_BULLET; i++)
-		{
-			g_scene.bullet[i] = GameObject_Bullet_Create();
-			GameObject_Bullet_SetPosXDefault(&g_scene.bullet[i], &g_scene.field);
-			GameObject_Bullet_SetPosYDefault(&g_scene.bullet[i], &g_scene.field);
-			GameObject_Bullet_SetVelXDefault(&g_scene.bullet[i]);
-		}
-	}
-
-	// シップ1 [↑:W, ↓:S]
-	{
-		GameObjectShip* ship = &g_scene.ship[0];
-		*ship = GameObjectShip_Create(LEFT, &g_scene.field, 80);
-		ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_8, PAD_INPUT_5);
-	}
-
-	// シップ2 [↑:↑, ↓:↓]
-	{
-		GameObjectShip* ship = &g_scene.ship[1];
-		*ship = GameObjectShip_Create(RIGHT, &g_scene.field, 80);
-		ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
-	}
-
-	//*
-	// シップ3 [↑:A, ↓:Z] (追加シップ) ※GameScene.h->NUM_SHIPを変更する必要あり
-	{
-		GameObjectShip* ship = &g_scene.ship[2];
-		*ship = GameObjectShip_Create(LEFT, &g_scene.field, 120);
-		ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_4, PAD_INPUT_1);
-	}
-	/**/
-
 	// リソース
 	g_resources = GameResource_Create();
 
@@ -100,12 +59,64 @@ void InitializeGame(void)
 	g_ship1_sound = GameSoundShip_Create(&g_scene, LEFT, g_resources.sound_ship1, SOUND_SHIP1_INTERVAL);
 	g_ship2_sound = GameSoundShip_Create(&g_scene, RIGHT, g_resources.sound_ship2, SOUND_SHIP2_INTERVAL);
 
-	// タイマー
-	g_scene.timer = GameTimer_Create();
-	GameTimer_SetRemainingDefault(&g_scene.timer);
+	// シーンセットアップ
+	{
+		// シーン状態
+		g_scene.game_state = STATE_DEMO;
 
-	// 得点
-	g_scene.score = GameScore_Create();
+		// フィールド
+		g_scene.field = GameObject_Field_Create();
+
+		// 弾
+		{
+			int i;
+			for (i = 0; i < NUM_BULLET; i++)
+			{
+				g_scene.bullet[i] = GameObject_Bullet_Create();
+				GameObject_Bullet_SetPosXDefault(&g_scene.bullet[i], &g_scene.field);
+				GameObject_Bullet_SetPosYDefault(&g_scene.bullet[i], &g_scene.field);
+				GameObject_Bullet_SetVelXDefault(&g_scene.bullet[i]);
+			}
+		}
+
+		// シップ
+		{
+			// シップスプライト
+			GameSprite sprite_ship = GameSprite_Create(GameTexture_Create(g_resources.texture_ship, Vec2_Create(19, 13), Vec2_Create(26, 38)));
+
+			// シップ1 [↑:W, ↓:S]
+			{
+				GameObjectShip* ship = &g_scene.ship[0];
+				*ship = GameObjectShip_Create(LEFT, &g_scene.field, 80);
+				ship->ship.sprite = sprite_ship;
+				ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_8, PAD_INPUT_5);
+			}
+
+			// シップ2 [↑:↑, ↓:↓]
+			{
+				GameObjectShip* ship = &g_scene.ship[1];
+				*ship = GameObjectShip_Create(RIGHT, &g_scene.field, 80);
+				ship->ship.sprite = sprite_ship;
+				ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
+			}
+
+			//*
+			// シップ3 [↑:A, ↓:Z] (追加シップ) ※GameScene.h->NUM_SHIPを変更する必要あり
+			{
+				GameObjectShip* ship = &g_scene.ship[2];
+				*ship = GameObjectShip_Create(LEFT, &g_scene.field, 120);
+				ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_4, PAD_INPUT_1);
+			}
+			/**/
+		}
+
+		// タイマー
+		g_scene.timer = GameTimer_Create();
+		GameTimer_SetRemainingDefault(&g_scene.timer);
+
+		// 得点
+		g_scene.score = GameScore_Create();
+	}
 }
 
 

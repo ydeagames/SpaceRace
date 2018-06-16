@@ -1,4 +1,5 @@
 #include "GameResource.h"
+#include "GameObject.h"
 
 // 定数の定義 ==============================================================
 
@@ -42,7 +43,7 @@ GameResource GameResource_Create(void)
 
 	// テクスチャ
 	res.texture_ship = LoadGraph(TEXTURE_SHIP_PROTECTED);
-	if (res.texture_ship == -1)
+	if (res.texture_ship == TEXTURE_MISSING)
 		res.texture_ship = LoadGraph(TEXTURE_SHIP);
 
 	return res;
