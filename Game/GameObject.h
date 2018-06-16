@@ -42,16 +42,16 @@ GameObject GameObject_Create(Vec2 pos, Vec2 vel, Vec2 size);
 void GameObject_UpdatePosition(GameObject* obj);
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetX(GameObject* obj, ObjectSide side, float pos = 0.f, float padding = 0.f);
+float GameObject_OffsetX(GameObject* obj, ObjectSide side, float pos = 0.f, float margin = 0.f);
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetY(GameObject* obj, ObjectSide side, float pos = 0.f, float padding = 0.f);
+float GameObject_OffsetY(GameObject* obj, ObjectSide side, float pos = 0.f, float margin = 0.f);
 
 // <オブジェクトX位置ゲット>
-float GameObject_GetX(GameObject* obj, ObjectSide side, float padding = 0.f);
+float GameObject_GetX(GameObject* obj, ObjectSide side, float margin = 0.f);
 
 // <オブジェクトY位置ゲット>
-float GameObject_GetY(GameObject* obj, ObjectSide side, float padding = 0.f);
+float GameObject_GetY(GameObject* obj, ObjectSide side, float margin = 0.f);
 
 // <オブジェクト当たり判定>
 BOOL GameObject_IsHit(GameObject* obj1, GameObject* obj2);

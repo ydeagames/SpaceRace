@@ -30,47 +30,47 @@ void GameObject_UpdatePosition(GameObject* obj)
 }
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetX(GameObject* obj, ObjectSide side, float pos, float padding)
+float GameObject_OffsetX(GameObject* obj, ObjectSide side, float pos, float margin)
 {
 	float offset = 0;
 	switch (side)
 	{
 	case LEFT:
-		offset = -(padding + obj->size.x / 2.f);
+		offset = -(margin + obj->size.x / 2.f);
 		break;
 	case RIGHT:
-		offset = (padding + obj->size.x / 2.f);
+		offset = (margin + obj->size.x / 2.f);
 		break;
 	}
 	return pos + offset;
 }
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetY(GameObject* obj, ObjectSide side, float pos, float padding)
+float GameObject_OffsetY(GameObject* obj, ObjectSide side, float pos, float margin)
 {
 	float offset = 0;
 	switch (side)
 	{
 	case TOP:
-		offset = -(padding + obj->size.y / 2.f);
+		offset = -(margin + obj->size.y / 2.f);
 		break;
 	case BOTTOM:
-		offset = (padding + obj->size.y / 2.f);
+		offset = (margin + obj->size.y / 2.f);
 		break;
 	}
 	return pos + offset;
 }
 
 // <オブジェクトX位置ゲット>
-float GameObject_GetX(GameObject* obj, ObjectSide side, float padding)
+float GameObject_GetX(GameObject* obj, ObjectSide side, float margin)
 {
-	return GameObject_OffsetX(obj, side, obj->pos.x, padding);
+	return GameObject_OffsetX(obj, side, obj->pos.x, margin);
 }
 
 // <オブジェクトY位置ゲット>
-float GameObject_GetY(GameObject* obj, ObjectSide side, float padding)
+float GameObject_GetY(GameObject* obj, ObjectSide side, float margin)
 {
-	return GameObject_OffsetY(obj, side, obj->pos.y, padding);
+	return GameObject_OffsetY(obj, side, obj->pos.y, margin);
 }
 
 // <オブジェクト当たり判定>
