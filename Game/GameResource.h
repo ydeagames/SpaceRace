@@ -6,7 +6,7 @@
 typedef struct
 {
 	// <フォント>
-	HFNT font_pong;
+	HFNT font_spacerace;
 	HFNT font_menu;
 	HFNT font_note;
 
@@ -16,14 +16,14 @@ typedef struct
 	HSND sound_ship2;
 
 	// <テクスチャ>
-	HGRP texture_ship;
+	HGRP texture_spacerace;
 } GameResource;
 
 // 定数の定義 ==============================================================
 
 // <フォント> ----------------------------------------------------------
 
-#define FONT_SIZE_PONG 80
+#define FONT_SIZE_SPACERACE 80
 #define FONT_SIZE_MENU 20
 #define FONT_SIZE_NOTE 12
 

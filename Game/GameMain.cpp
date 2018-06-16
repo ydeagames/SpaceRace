@@ -82,7 +82,7 @@ void InitializeGame(void)
 		// シップ
 		{
 			// シップスプライト
-			GameSprite sprite_ship = GameSprite_Create(GameTexture_Create(g_resources.texture_ship, Vec2_Create(19, 13), Vec2_Create(26, 38)));
+			GameSprite sprite_ship = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(19, 13), Vec2_Create(26, 38)));
 
 			// シップ1 [↑:W, ↓:S]
 			{
