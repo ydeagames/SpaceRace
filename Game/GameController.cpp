@@ -40,12 +40,12 @@ GameController GameController_Player_Create(GameObject* object, GameScene* scene
 
 void GameController_Player_Update(GameController* ctrl)
 {
+	ctrl->object->vel.y = 0.f;
 }
 
 // キー入力でパドルを操作
 void GameController_Player_UpdateControl(GameController* ctrl)
 {
-	ctrl->object->vel.y = 0.f;
 	if (IsButtonDown(ctrl->player_key_up))
 		ctrl->object->vel.y += -SHIP_VEL;
 	if (IsButtonDown(ctrl->player_key_down))
