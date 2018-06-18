@@ -20,6 +20,10 @@
 // <リソース> ----------------------------------------------------------
 GameResource g_resources;
 
+// <スプライト切り替え用 (デモ画面では機体の下半分がない)> -------------
+GameSprite g_sprite_ship_half;
+GameSprite g_sprite_ship_full;
+
 // <サウンド> ----------------------------------------------------------
 GameSoundShip g_ship1_sound;
 GameSoundShip g_ship2_sound;
@@ -87,31 +91,38 @@ void InitializeGame(void)
 		// シップ
 		{
 			// シップスプライト
-			GameSprite sprite = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(16, 13), Vec2_Create(32, 38)));
+			{
+				g_sprite_ship_full = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(16, 13), Vec2_Create(32, 38)));
+				g_sprite_ship_half = GameSprite_Create(GameTexture_Create(g_resources.texture_spacerace, Vec2_Create(16, 13), Vec2_Create(32, 18)));
+				g_sprite_ship_half.texture.center.y = 19;
+			}
 
 			// シップ1 [↑:W, ↓:S]
 			{
 				g_scene.ship[0] = GameObjectShip_Create(LEFT, &g_scene.field, 80);
-				g_scene.ship[0].ship.sprite = sprite;
 				g_scene.ship[0].controller = GameController_Player_Create(&g_scene.ship[0].ship, PAD_INPUT_8, PAD_INPUT_5);
 			}
 
 			// シップ2 [↑:↑, ↓:↓]
 			{
-				GameObjectShip* ship = &g_scene.ship[1];
-				*ship = GameObjectShip_Create(RIGHT, &g_scene.field, 80);
-				ship->ship.sprite = sprite;
-				ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
+				g_scene.ship[1] = GameObjectShip_Create(RIGHT, &g_scene.field, 80);
+				g_scene.ship[1].controller = GameController_Player_Create(&g_scene.ship[1].ship, PAD_INPUT_UP, PAD_INPUT_DOWN);
 			}
 
 			/*
 			// シップ3 [↑:A, ↓:Z] (追加シップ) ※GameScene.h->NUM_SHIPを変更する必要あり
 			{
-				GameObjectShip* ship = &g_scene.ship[2];
-				*ship = GameObjectShip_Create(LEFT, &g_scene.field, 120);
-				ship->controller = GameController_Player_Create(&ship->ship, PAD_INPUT_4, PAD_INPUT_1);
+				g_scene.ship[2] = GameObjectShip_Create(LEFT, &g_scene.field, 120);
+				g_scene.ship[2].controller = GameController_Player_Create(&g_scene.ship[2].ship, PAD_INPUT_4, PAD_INPUT_1);
 			}
 			/**/
+
+			// ハーフシップスプライトを適用
+			{
+				int i;
+				for (i = 0; i < NUM_SHIP; i++)
+					g_scene.ship[i].ship.sprite = g_sprite_ship_half;
+			}
 		}
 
 		// タイマー
@@ -172,6 +183,13 @@ void UpdateGameSceneDemo(void)
 				int i;
 				for (i = 0; i < NUM_SHIP; i++)
 					GameObjectShip_Reset(&g_scene.ship[i]);
+			}
+
+			// フルシップスプライトを適用
+			{
+				int i;
+				for (i = 0; i < NUM_SHIP; i++)
+					g_scene.ship[i].ship.sprite = g_sprite_ship_full;
 			}
 
 			// サウンド再生
@@ -282,6 +300,20 @@ void UpdateGameScenePlay(void)
 		GameTimer_Pause(&g_scene.timerbar.timer);
 		GameTimer_SetRemainingDefault(&g_scene.timerbar.timer);
 
+		// シップを初期位置へ
+		{
+			int i;
+			for (i = 0; i < NUM_SHIP; i++)
+				GameObjectShip_Reset(&g_scene.ship[i]);
+		}
+
+		// ハーフシップスプライトを適用
+		{
+			int i;
+			for (i = 0; i < NUM_SHIP; i++)
+				g_scene.ship[i].ship.sprite = g_sprite_ship_half;
+		}
+
 		// サウンド停止
 		GameSoundShip_Stop(&g_ship1_sound);
 		GameSoundShip_Stop(&g_ship2_sound);
@@ -315,19 +347,8 @@ void RenderGame(void)
 // <ゲームの描画処理:シーン:デモ> ---------------------------------------------
 void RenderGameSceneDemo(void)
 {
-	// <オブジェクト描画>
-	// フィールド描画
-	GameObject_Field_Render(&g_scene.field);
-	// 弾描画
-	{
-		int i;
-		for (i = 0; i < NUM_BULLET; i++)
-			GameObject_Render(&g_scene.bullet[i]);
-	}
-	// タイム描画
-	GameTimerBar_Render(&g_scene.timerbar);
-	// スコア描画
-	GameScore_Render(&g_scene.score, &g_scene.field, &g_resources);
+	// デモ時はプレイ時と同じ処理
+	RenderGameScenePlay();
 }
 
 // <ゲームの描画処理:シーン:プレイ> -------------------------------------------
