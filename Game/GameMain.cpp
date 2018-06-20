@@ -374,9 +374,19 @@ void RenderGameSceneDemo(void)
 		// ÉçÉSÉÄÅ[ÉrÅ[ï`âÊ
 		{
 			static int counter = 0;
-			SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)GetPercentValue(1 - GetPercentageRange((float)counter++, 60 * 3, 60 * 3.5f), 255));
-			DrawExtendGraph((int)GameObject_GetX(&g_scene.field, LEFT), (int)GameObject_GetY(&g_scene.field, TOP), (int)g_scene.field.size.x, (int)g_scene.field.size.y, g_resources.movie_logo, TRUE);
-			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+			{
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)GetPercentValue(1 - GetPercentageRange((float)counter++, 60 * 3, 60 * 3.5f), 255));
+				DrawExtendGraph((int)GameObject_GetX(&g_scene.field, LEFT), (int)GameObject_GetY(&g_scene.field, TOP), (int)g_scene.field.size.x, (int)g_scene.field.size.y, g_resources.movie_logo, TRUE);
+				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+			}
+			{
+				GameObject black = g_scene.field;
+				black.sprite.color = COLOR_BLACK;
+
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)GetPercentValue(1 - GetPercentageRange((float)counter++, 60 * 0, 60 * 0.5f), 255));
+				GameObject_Render(&black);
+				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+			}
 		}
 	}
 }

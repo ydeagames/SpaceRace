@@ -4,7 +4,7 @@
 // 列挙型の定義 ============================================================
 
 // <位置関係> ----------------------------------------------------------
-enum ObjectSide
+typedef enum
 {
 	NONE = 0,
 	CENTER_X = 1,				// X中央
@@ -13,23 +13,23 @@ enum ObjectSide
 	CENTER_Y = -1,				// Y中央
 	TOP = -3,					// 上
 	BOTTOM = 3					// 下
-};
+} ObjectSide;
 
 // <縁の位置> ----------------------------------------------------------
-enum ObjectEdgeSide
+typedef enum
 {
 	EDGESIDE_CENTER = 0,		// 縁の上
 	EDGESIDE_OUTER = -1,		// 縁の外側
 	EDGESIDE_INNER = 1			// 縁の内側
-};
+} ObjectEdgeSide;
 
 // <ワールドのつながり> ------------------------------------------------
-enum ObjectConnection
+typedef enum
 {
 	CONNECTION_NONE = 0,		// 繋がりなし、見えない空間に移動
 	CONNECTION_BARRIER,			// 壁があり、進めない
 	CONNECTION_LOOP				// 反対側から出てくる
-};
+} ObjectConnection;
 
 // 構造体の宣言 ============================================================
 
