@@ -7,6 +7,7 @@
 #define FONT_FILE_SPACERACE_CUSTOM "Resources\\Fonts\\TheSlavicFont-Regular.ttf"		// カスタムフォントファイル
 #define FONT_NAME_SPACERACE_CUSTOM "The Slavic Font"									// カスタムフォントネーム
 #define FONT_NAME_SPACERACE "HGP創英角ｺﾞｼｯｸUB"											// フォールバック用フォントネーム
+#define FONT_NAME_MENU "HGP創英角ｺﾞｼｯｸUB"
 
 // <サウンド> ----------------------------------------------------------
 #define SOUND_DEAD "Resources\\Audio\\se_dead.ogg"										// シップ死亡SE
@@ -16,6 +17,9 @@
 // <テクスチャ> --------------------------------------------------------
 #define TEXTURE_SPACERACE_PROTECTED "Resources\\Textures\\Protected\\SpaceRace.png"		// リソース保護テクスチャ
 #define TEXTURE_SPACERACE "Resources\\Textures\\SpaceRace.png"							// オープンテクスチャ
+
+// <動画> --------------------------------------------------------------
+#define MOVIE_LOGO "Resources\\Movies\\ydeagames.avi"									// ロゴムービー
 
 // 関数の定義 ==============================================================
 
@@ -32,6 +36,7 @@ GameResource GameResource_Create(void)
 		res.font_spacerace = CreateFontToHandle(FONT_NAME_SPACERACE_CUSTOM, FONT_SIZE_SPACERACE, 3, DX_FONTTYPE_ANTIALIASING_4X4);
 	else
 		res.font_spacerace = CreateFontToHandle(FONT_NAME_SPACERACE, FONT_SIZE_SPACERACE, 3, DX_FONTTYPE_ANTIALIASING_4X4);
+	res.font_menu = CreateFontToHandle(FONT_NAME_MENU, FONT_SIZE_MENU, 3, DX_FONTTYPE_ANTIALIASING_4X4);
 
 	// サウンド
 	res.sound_dead = LoadSoundMem(SOUND_DEAD);
@@ -42,6 +47,9 @@ GameResource GameResource_Create(void)
 	res.texture_spacerace = LoadGraph(TEXTURE_SPACERACE_PROTECTED);
 	if (res.texture_spacerace == TEXTURE_MISSING)										// リソース保護テクスチャが無かったら
 		res.texture_spacerace = LoadGraph(TEXTURE_SPACERACE);							// オープンテクスチャを読み込む
+
+	// 動画
+	res.movie_logo = LoadGraph(MOVIE_LOGO);												// オープンテクスチャを読み込む
 
 	return res;
 }
@@ -60,4 +68,7 @@ void GameResource_Delete(GameResource* res)
 
 	// テクスチャ
 	DeleteGraph(res->texture_spacerace);
+
+	// 動画
+	DeleteGraph(res->movie_logo);
 }

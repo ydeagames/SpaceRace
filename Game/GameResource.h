@@ -7,6 +7,7 @@ typedef struct
 {
 	// <フォント>
 	HFNT font_spacerace;
+	HFNT font_menu;
 
 	// <サウンド>
 	HSND sound_dead;
@@ -15,6 +16,9 @@ typedef struct
 
 	// <テクスチャ>
 	HGRP texture_spacerace;
+
+	// <動画>
+	HGRP movie_logo;
 } GameResource;
 
 // 定数の定義 ==============================================================
@@ -22,6 +26,7 @@ typedef struct
 // <フォント> ----------------------------------------------------------
 
 #define FONT_SIZE_SPACERACE 80			// フォントサイズ
+#define FONT_SIZE_MENU 20
 
 // 関数の宣言 ==============================================================
 

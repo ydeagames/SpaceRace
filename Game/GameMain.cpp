@@ -13,6 +13,7 @@
 #include "GameResource.h"
 #include "GameSoundShip.h"
 #include "GameScene.h"
+#include "GameUtils.h"
 
 
 // グローバル変数の宣言 ====================================================
@@ -140,6 +141,9 @@ void InitializeGame(void)
 		// 得点
 		g_scene.score = GameScore_Create();
 	}
+
+	// 動画再生
+	PlayMovieToGraph(g_resources.movie_logo);
 }
 
 
@@ -349,6 +353,32 @@ void RenderGameSceneDemo(void)
 {
 	// デモ時はプレイ時と同じ処理
 	RenderGameScenePlay();
+
+	{
+		// タイトル描画
+		{
+			// フォントを使用した文字の幅を取得
+			int width = GetDrawFormatStringWidthToHandle(g_resources.font_spacerace, "Space Race");
+
+			// タイトル描画
+			DrawFormatStringToHandle((int)(GameObject_GetX(&g_scene.field, CENTER_X) - width / 2), (int)GameObject_GetY(&g_scene.field, TOP, -100), COLOR_WHITE, g_resources.font_spacerace, "Space Race");
+		}
+		// 開始テキスト描画
+		{
+			// フォントを使用した文字の幅を取得
+			int width = GetDrawFormatStringWidthToHandle(g_resources.font_menu, "スペースキーを押して開始");
+
+			// 開始テキスト描画
+			DrawFormatStringToHandle((int)(GameObject_GetX(&g_scene.field, CENTER_X) - width / 2), (int)GameObject_GetY(&g_scene.field, TOP, -200), COLOR_WHITE, g_resources.font_menu, "スペースキーを押して開始");
+		}
+		// ロゴムービー描画
+		{
+			static int counter = 0;
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)GetPercentValue(1 - GetPercentageRange((float)counter++, 60 * 3, 60 * 3.5f), 255));
+			DrawExtendGraph((int)GameObject_GetX(&g_scene.field, LEFT), (int)GameObject_GetY(&g_scene.field, TOP), (int)g_scene.field.size.x, (int)g_scene.field.size.y, g_resources.movie_logo, TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+	}
 }
 
 // <ゲームの描画処理:シーン:プレイ> -------------------------------------------
